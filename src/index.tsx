@@ -10,9 +10,9 @@ import Login from './pages/login';
 interface TypeOfRouterItem {
     path : string
     exact? : boolean
-    component : JSX.Element
+    component : any
 }
-const routes:[TypeOfRouterItem] = [
+const routes:Array<TypeOfRouterItem> = [
     {   path: '/',
         exact: true,
         component: Home,

@@ -2,23 +2,25 @@ import React, { PureComponent, Fragment } from 'react'
 // import PropTypes from 'prop-types'
 // import { connect } from 'dva'
 import { Button, Row, Form, Icon, Input } from 'antd'
+import {FormComponentProps} from 'antd/lib/form/Form';
 // import { GlobalFooter } from 'ant-design-pro'
 // import { Trans, withI18n } from '@lingui/react'
 // import { setLocale } from 'utils'
 // import config from 'utils/config'
 
-// import styles1 from './index.less'
+// import styles from './index.less'
 const styles = require('./index.less')
 const FormItem = Form.Item
 
 // @withI18n()
 // @connect(({ loading }) => ({ loading }))
 // @Form.create()
-class Login extends PureComponent {
+class Login extends PureComponent<CreateNoticeModalProps, any> {
   handleOk = () => {
     const { form } = this.props
     const { validateFieldsAndScroll } = form;
     validateFieldsAndScroll((errors:any, values:any) => {
+        console.log(values)
       if (errors) {
         return
       }
@@ -91,7 +93,7 @@ class Login extends PureComponent {
               <Button
                 type="primary"
                 onClick={this.handleOk}
-                loading={true}
+                loading={false}
               >
                 <span>Sign in</span>
               </Button>
@@ -109,7 +111,7 @@ class Login extends PureComponent {
           </form>
         </div>
         {/*<div className={styles.footer}>
-          <GlobalFooter links={footerLinks} copyright={config.copyright} />
+          <GlobalFooter links={`footerLinks`} copyright={`config.copyright`} />
         </div>*/}
       </Fragment>
     )
@@ -121,5 +123,9 @@ class Login extends PureComponent {
 //   dispatch: PropTypes.func,
 //   loading: PropTypes.object,
 // }
-
-export default Login
+interface CreateNoticeModalProps extends FormComponentProps {
+  isShow: boolean
+  onCancel: any
+  onOk: any
+}
+export default Form.create<CreateNoticeModalProps>({})(Login)

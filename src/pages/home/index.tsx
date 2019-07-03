@@ -1,7 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {ping} from '../../store/actions'
-import { Button } from 'antd';
+import { Button, Form } from 'antd';
+import {FormComponentProps} from 'antd/lib/form/Form';
 import  Todo  from './../../components/Todolist';
 // const styles = require('./App.css')
 
@@ -45,6 +46,7 @@ const mapDispatchToProps = (dispatch: Function) => {
 interface IProps {
   isPinging: boolean
   ping: () => void
+  form : any
 }
 
 // @connect<TypeOfState, TypeOfDispatch,{}>(
@@ -58,7 +60,8 @@ class Home extends React.Component<IProps , any > {
     this.state =  {}
   }
   public render () {
-    const { isPinging, ping } = this.props
+    const { isPinging, ping, form } = this.props
+    // console.log(form)
     return (
       <div>
         <h1 className="title-h1">isPinging: {isPinging.toString()}</h1>
@@ -68,5 +71,12 @@ class Home extends React.Component<IProps , any > {
     )
   }
 }
+
+interface CreateNoticeModalProps extends FormComponentProps {
+  isShow: boolean
+  onCancel: any
+  onOk: any
+}
+// export default Form.create<CreateNoticeModalProps>({})(Login)
 // export default connect(isPinging => isPinging, {ping})(CSSModules(App,styles));
-export default Home;
+export default Form.create<CreateNoticeModalProps>({})(Home);
