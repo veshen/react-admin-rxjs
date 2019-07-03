@@ -1,7 +1,7 @@
 import React, { FunctionComponent, memo, useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import { addTodoListItem, fetchTodoList } from '../store/actions';
-import { Button, Input } from 'antd';
+import { Button, Input, List } from 'antd';
 // const styles = require('./App.css')
 // componentDidMount ===> useEffect(()=>{},[])
 
@@ -43,11 +43,15 @@ const Page:FunctionComponent<TypeOfPageFC> = ({toDoList, addTodoListItem,fetchTo
                 <Button onClick={()=>addTodoListItem(text)}>Add</Button>
                 <Button onClick={()=>fetchTodoList()}>fetch todolist</Button>
             </div>
-            <ul>
-                {
-                    toDoList.map((item,index)=><li key={index}>{item.text}</li>)
-                }
-            </ul>
+            <List
+                  bordered
+                  dataSource={toDoList}
+                  renderItem={item => (
+                    <List.Item>
+                        {item.text}
+                    </List.Item>
+                  )}
+                />
         </div>
     )
 }
