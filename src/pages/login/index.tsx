@@ -111,7 +111,7 @@ class Login extends PureComponent<CreateNoticeModalProps, any> {
           </form>
         </div>
         {/*<div className={styles.footer}>
-          <GlobalFooter links={`footerLinks`} copyright={`config.copyright`} />
+          <GlobalFooter links={footerLinks} copyright={config.copyright} />
         </div>*/}
       </Fragment>
     )
