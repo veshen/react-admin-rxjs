@@ -15,10 +15,10 @@ interface TypeOfProps {
 class Page extends Component<TypeOfProps> {
   render() {
     const { className, children, loading = false, inner = false } = this.props
-    const loadingStyle = {
-      height: 'calc(100vh - 184px)',
-      overflow: 'hidden',
-    }
+    // const loadingStyle = {
+    //   height: 'calc(100vh - 184px)',
+    //   overflow: 'hidden',
+    // }
     return (
       <div
         className={classnames(className, {

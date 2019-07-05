@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 // import PropTypes from 'prop-types'
 // import { connect } from 'dva'
-import { Button, Row, Form, Icon, Input } from 'antd'
+import { Button, Row, Form, Input } from 'antd'
 import {FormComponentProps} from 'antd/lib/form/Form';
 // import { GlobalFooter } from 'ant-design-pro'
 // import { Trans, withI18n } from '@lingui/react'
@@ -32,14 +32,14 @@ class Login extends PureComponent<CreateNoticeModalProps, any> {
     const { form } = this.props
     const { getFieldDecorator } = form
 
-    let footerLinks = [
-      {
-        key: 'github',
-        title: <Icon type="github" />,
-        href: 'https://github.com/zuiidea/antd-admin',
-        blankTarget: true,
-      },
-    ]
+    // let footerLinks = [
+    //   {
+    //     key: 'github',
+    //     title: <Icon type="github" />,
+    //     href: 'https://github.com/zuiidea/antd-admin',
+    //     blankTarget: true,
+    //   },
+    // ]
 
     // if (config.i18n) {
     //   footerLinks = footerLinks.concat(
