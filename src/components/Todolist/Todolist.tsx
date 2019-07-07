@@ -1,4 +1,4 @@
-import React, { FunctionComponent, memo, useEffect } from 'react';//useState
+import React, { memo, useEffect } from 'react';//useState
 import { Button, Input, List, Form, Icon } from 'antd';
 import { FormComponentProps } from 'antd/lib/form/Form';
 
@@ -22,7 +22,7 @@ interface TypeOfPageFC extends IProps {
 
 }
 
-const Todolist:FunctionComponent<TypeOfPageFC> = ({toDoList, addTodoListItem,fetchTodoList, form}:IProps) => {
+const Todolist:React.SFC<TypeOfPageFC> = ({toDoList, addTodoListItem,fetchTodoList, form}:IProps) => {
 
     const { getFieldDecorator, validateFields } = form;
     useEffect(()=>{
@@ -33,11 +33,11 @@ const Todolist:FunctionComponent<TypeOfPageFC> = ({toDoList, addTodoListItem,fet
             console.log('conponent did update..')
         }
     },[]); // componentDidMount
-    // useEffect(()=>{
-    //     return()=>{
-    //         console.log('conponent did unmount..')
-    //     }
-    // },[])
+    useEffect(()=>{
+        return()=>{
+            console.log('conponent did unmount..')
+        }
+    },[])
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         validateFields((err, values) => {
