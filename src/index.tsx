@@ -7,7 +7,7 @@ import store from './store/store'
 // import routes from './routes-config.js'
 import Home from './pages/home/index.connect';
 import Login from './pages/login';
-import NotFound from './404';
+// import NotFound from './404';
 interface TypeOfRouterItem {
     path : string
     exact? : boolean
@@ -26,10 +26,10 @@ const routes:Array<TypeOfRouterItem> = [
     //     path: '/user',
     //     component: User,
     // },
-    {
-        path: '*',
-        component: NotFound
-    }
+    // {
+    //     path: '*',
+    //     component: NotFound
+    // }
 ];
 ReactDOM.render(
   <Provider store={store}>
