@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { renderRoutes } from 'react-router-config'
 import store from './store/store'
 // import routes from './routes-config.js'
-import Home from './pages/home';
+import Home from './pages/home/index.connect';
 import Login from './pages/login';
 import NotFound from './404';
 interface TypeOfRouterItem {
