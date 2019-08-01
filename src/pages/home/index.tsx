@@ -2,13 +2,11 @@ import React from 'react';
 import { Button } from 'antd';
 import  Todo  from './../../components/Todolist/Todolist.connect';
 
-
 export interface IProps {
   isPinging: boolean
   ping: () => void
   form : any
 }
-
 
 class Index extends React.Component<IProps , {} > {
   constructor(props: IProps) {
