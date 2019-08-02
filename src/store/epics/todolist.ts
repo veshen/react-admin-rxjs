@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable';
-import { map, switchMap, filter, mapTo, delay } from 'rxjs/operators'; //catchError
+import { map, switchMap, filter, delay } from 'rxjs/operators'; //catchError
 
 import { ActionType, isActionOf } from 'typesafe-actions'; //
 import * as actions from "./../actions";
