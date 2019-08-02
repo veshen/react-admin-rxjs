@@ -20,9 +20,8 @@ const initalState = {
 
 export const starterNavigationReducer = (state : starterNavigationState = initalState, action:any): starterNavigationState => {
   switch (action.type) {
-    case getType(actions.homePingAction):
-        console.log(action)
-      return { ...state, isPinging: true };
+    case getType(actions.activeMenuIsOpen):
+      return { ...state, navOpenState:{ ...state.navOpenState, ...action.payload} };
     default:
       return state;
   }

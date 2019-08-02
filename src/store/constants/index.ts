@@ -8,3 +8,4 @@ export const ADD_TODOLIST_ITEM = "@@todo/ADDITEM";
 export const ADD_TODOLIST_FETCH_ITEM = "@@todo/ADDFETCHITEM";
 
 // export const WEATHER_ERROR = "@@weather/ERROR";
+export const ACTIVE_MENU_STATE = "@@starterNavigation/ACTIVE_IS_OPEN";

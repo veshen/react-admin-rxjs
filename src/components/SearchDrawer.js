@@ -63,14 +63,14 @@ export default class SearchDrawer extends Component {
               this.props.onSearchInputRef(el);
             }
           }}
-          style={{
-            border: 'none',
-            display: 'block',
-            fontSize: 24,
-            fontWeight: 200,
-            outline: 'none',
-            padding: '0 0 0 12px',
-          }}
+          // style={{
+          //   border: 'none',
+          //   display: 'block',
+          //   fontSize: 24,
+          //   fontWeight: 200,
+          //   outline: 'none',
+          //   padding: '0 0 0 12px',
+          // }}
         />
         { this.searchResults() }
       </div>

@@ -1,7 +1,6 @@
 import { ActionType } from 'typesafe-actions';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router";
 
 import * as actions from "./../../store/actions";
 
@@ -20,7 +19,7 @@ const mapStateToProps = (state:RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>, props : OwnProps) => bindActionCreators({
-
+  activeMenuIsOpen : (isOpen:boolean) => actions.activeMenuIsOpen(isOpen)
 },dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(StarterNavigation);

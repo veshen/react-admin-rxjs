@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import {RouteComponentProps} from "react-router";
 import Nav, {
@@ -26,24 +26,26 @@ interface IProps extends RouteComponentProps{
     isOpen : boolean
     width : number
   }
+  activeMenuIsOpen : (isOpen:boolean) => any
 }
 
 interface TypeOfStarterNavigation extends IProps {
 
 }
 
-const StarterNavigation:React.SFC<TypeOfStarterNavigation> = ({match,location,history,navOpenState}:IProps) => {
+const StarterNavigation:React.SFC<TypeOfStarterNavigation> = ({match,location,history,navOpenState, activeMenuIsOpen}:IProps) => {
   const navLinks = [
     ['/', 'Home', DashboardIcon],
     ['/settings', 'Settings', GearIcon],
   ]
+  const [ openDrawer, setOpenDrawer ] = useState<string>('')
   const backIcon = <ArrowleftIcon label="Back icon" size="medium" />;
   const globalPrimaryIcon = <AtlassianIcon label="Atlassian icon" size="xlarge" />;
     return (
       <Nav
         isOpen={navOpenState.isOpen}
         width={navOpenState.width}
-        onResize={()=>{}}
+        onResize={()=>activeMenuIsOpen(!navOpenState.isOpen)}
         containerHeaderComponent={() => (
           <AkContainerTitle
             href="https://atlaskit.atlassian.com/"
@@ -56,39 +58,39 @@ const StarterNavigation:React.SFC<TypeOfStarterNavigation> = ({match,location,hi
         globalPrimaryIcon={globalPrimaryIcon}
         globalPrimaryItemHref="/"
         globalSearchIcon={<SearchIcon label="Search icon" />}
-        hasBlanket
-        // drawers={[
-        //   <AkSearchDrawer
-        //     backIcon={backIcon}
-        //     isOpen={this.state.openDrawer === 'search'}
-        //     key="search"
-        //     onBackButton={() => {}}
-        //     primaryIcon={globalPrimaryIcon}
-        //   >
-        //     <SearchDrawer
-        //       onResultClicked={() => {}}
-        //       onSearchInputRef={(ref:any) => {
-        //         // this.searchInputRef = ref;
-        //       }}
-        //     />
-        //   </AkSearchDrawer>,
-        //   <AkCreateDrawer
-        //     backIcon={backIcon}
-        //     isOpen={this.state.openDrawer === 'create'}
-        //     key="create"
-        //     onBackButton={() => this.openDrawer(null)}
-        //     primaryIcon={globalPrimaryIcon}
-        //   >
-        //     <CreateDrawer
-        //       onItemClicked={() => this.openDrawer(null)}
-        //     />
-        //   </AkCreateDrawer>
-        // ]}
         globalAccountItem={AccountDropdownMenu}
         globalCreateIcon={<CreateIcon label="Create icon" />}
         globalHelpItem={HelpDropdownMenu}
-        // onSearchDrawerOpen={() => this.openDrawer('search')}
-        // onCreateDrawerOpen={() => this.openDrawer('create')}
+        hasBlanket
+        drawers={[
+          <AkSearchDrawer
+            backIcon={backIcon}
+            isOpen={openDrawer === 'search'}
+            key="search"
+            onBackButton={() => setOpenDrawer('')}
+            primaryIcon={globalPrimaryIcon}
+          >
+            <SearchDrawer
+              onResultClicked={() => {}}
+              // onSearchInputRef={(ref:any) => {
+              //   // this.searchInputRef = ref;
+              // }}
+            />
+          </AkSearchDrawer>,
+          <AkCreateDrawer
+            backIcon={backIcon}
+            isOpen={openDrawer === 'create'}
+            key="create"
+            onBackButton={() => setOpenDrawer('')}
+            primaryIcon={globalPrimaryIcon}
+          >
+            <CreateDrawer
+              onItemClicked={() => setOpenDrawer('')}
+            />
+          </AkCreateDrawer>
+        ]}
+        onSearchDrawerOpen={() => setOpenDrawer('search')}
+        onCreateDrawerOpen={() => setOpenDrawer('create')}
       >
         {
           navLinks.map((link:any) => {
