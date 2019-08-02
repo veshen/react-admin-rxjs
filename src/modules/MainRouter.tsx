@@ -4,8 +4,8 @@ import { BrowserRouter} from "react-router-dom";
 import { Provider } from 'react-redux'
 import { renderRoutes } from 'react-router-config'
 
-import Page from '@atlaskit/page';
-import StarterNavigation from '../components/StarterNavigation/StarterNavigation.connect';
+import BasicLayout from "./../layouts/BasicLayout.connect";
+
 import Home from './../pages/home/index.connect';
 import SettingsPage from '../pages/SettingsPage';
 
@@ -35,11 +35,9 @@ const MainRouter:React.SFC<TypeOfMainRouter> = () => {
   return(
     <Provider store={store}>
       <BrowserRouter>
-        <Page
-          navigation={<StarterNavigation/>}
-        >
+        <BasicLayout>
           {renderRoutes(routes)}
-        </Page>
+        </BasicLayout>
       </BrowserRouter>
     </Provider>
   )
