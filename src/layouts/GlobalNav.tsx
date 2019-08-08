@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { GlobalNav, Item, ItemAvatar } from '@atlaskit/navigation-next';
-import AppSwitcher from '@atlaskit/app-switcher';
+import { AkNavigationItemGroup, AkNavigationItem } from '@atlaskit/navigation';
+import Page from '@atlaskit/page';
 import AtlassianIcon from '@atlaskit/logo/dist/esm/AtlassianLogo/Icon';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import CreateIcon from '@atlaskit/icon/glyph/add';
@@ -65,11 +66,22 @@ const appSwitcherData = {
 interface TypeOfNav {
 
 }
-
+const NavList = () => {
+  return(
+    <Fragment>
+      <AkNavigationItemGroup>
+        <AkNavigationItem
+          icon={true ? <AtlassianIcon label="Atlassian" /> : null}
+          isCompact={true}
+          text="With drop icon"
+        />
+      </AkNavigationItemGroup>
+    </Fragment>
+  )
+}
 const Nav:React.SFC<TypeOfNav>= ({}) => {
   const [ isOpenSearchDrawer, setIsOpenSearchDrawer ] = useState(false)
   const [ isOpenMenuDrawer, setIsOpenMenuDrawer ] = useState(false)
-  console.log(AppSwitcher)
   return(
     <Fragment>
       <GlobalNav primaryItems={[
@@ -126,9 +138,27 @@ const Nav:React.SFC<TypeOfNav>= ({}) => {
         <code>Drawer contents</code>
       </Drawer>
       <Drawer onClose={()=>setIsOpenMenuDrawer(false)} isOpen={isOpenMenuDrawer} width="narrow">
-        <code>
-          <AtlassianLogo/>
-        </code>
+        <div style={{'paddingRight':'20px'}}>
+        <Page>
+          <AtlassianLogo />
+          <AkNavigationItemGroup>
+            {
+              appSwitcherData.recentContainers.map( (item:any) => {
+                return(
+                  <AkNavigationItem
+                    icon={true ? <img src={item.iconUrl} /> : null}
+                    isCompact={true}
+                    isSelected={false}
+                    text={item.name}
+                  />
+                )
+              })
+            }
+
+          </AkNavigationItemGroup>
+        </Page>
+
+        </div>
       </Drawer>
 
     </Fragment>
