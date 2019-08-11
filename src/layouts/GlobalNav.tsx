@@ -143,9 +143,10 @@ const Nav:React.SFC<TypeOfNav>= ({}) => {
           <AtlassianLogo />
           <AkNavigationItemGroup>
             {
-              appSwitcherData.recentContainers.map( (item:any) => {
+              appSwitcherData.recentContainers.map( (item:any,index) => {
                 return(
                   <AkNavigationItem
+                    key={index}
                     icon={true ? <img src={item.iconUrl} /> : null}
                     isCompact={true}
                     isSelected={false}
