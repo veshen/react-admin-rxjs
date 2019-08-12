@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+// import { Link, withRouter } from 'react-router-dom';
 import {RouteComponentProps} from "react-router";
 
-import {  LayoutManager, NavigationProvider, GlobalNavigationSkeleton } from '@atlaskit/navigation-next';
+import {  LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
 
 // import { AtlassianIcon, AtlassianWordmark } from '@atlaskit/logo';
 
@@ -10,7 +11,7 @@ import GlobalNav from './GlobalNav'
 import ContainerNavigation from './ContainerNavigation'
 
 
-import atlaskitLogo from '../../images/atlaskit.png';
+// import atlaskitLogo from '../../images/atlaskit.png';
 
 interface IProps extends RouteComponentProps{
   navOpenState : {
@@ -30,7 +31,7 @@ const StarterNavigation:React.SFC<TypeOfStarterNavigation> = ({match,location,hi
   //   ['/', 'Home', DashboardIcon],
   //   ['/settings', 'Settings', GearIcon],
   // ]
-  const [ openDrawer, setOpenDrawer ] = useState<boolean>(false)
+  // const [ openDrawer, setOpenDrawer ] = useState<boolean>(false)
     return (
       <NavigationProvider>
         <LayoutManager

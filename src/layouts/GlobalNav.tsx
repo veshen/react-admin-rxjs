@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { GlobalNav, Item, ItemAvatar } from '@atlaskit/navigation-next';
+import { GlobalNav } from '@atlaskit/navigation-next';
 import { AkNavigationItemGroup, AkNavigationItem } from '@atlaskit/navigation';
 import Page from '@atlaskit/page';
 import AtlassianIcon from '@atlaskit/logo/dist/esm/AtlassianLogo/Icon';
@@ -9,7 +9,7 @@ import HelpIcon from '@atlaskit/icon/glyph/question-circle';
 import MenuIcon from '@atlaskit/icon/glyph/menu';
 import Avatar from '@atlaskit/avatar';
 import Drawer from '@atlaskit/drawer';
-import Badge from '@atlaskit/badge';
+// import Badge from '@atlaskit/badge';
 import { AtlassianLogo } from '@atlaskit/logo';
 const appSwitcherData = {
   recentContainers: [
@@ -66,20 +66,20 @@ const appSwitcherData = {
 interface TypeOfNav {
 
 }
-const NavList = () => {
-  return(
-    <Fragment>
-      <AkNavigationItemGroup>
-        <AkNavigationItem
-          icon={true ? <AtlassianIcon label="Atlassian" /> : null}
-          isCompact={true}
-          text="With drop icon"
-        />
-      </AkNavigationItemGroup>
-    </Fragment>
-  )
-}
-const Nav:React.SFC<TypeOfNav>= ({}) => {
+// const NavList = () => {
+//   return(
+//     <Fragment>
+//       <AkNavigationItemGroup>
+//         <AkNavigationItem
+//           icon={true ? <AtlassianIcon label="Atlassian" /> : null}
+//           isCompact={true}
+//           text="With drop icon"
+//         />
+//       </AkNavigationItemGroup>
+//     </Fragment>
+//   )
+// }
+const Nav:React.SFC<TypeOfNav>= () => {
   const [ isOpenSearchDrawer, setIsOpenSearchDrawer ] = useState(false)
   const [ isOpenMenuDrawer, setIsOpenMenuDrawer ] = useState(false)
   return(
@@ -147,7 +147,7 @@ const Nav:React.SFC<TypeOfNav>= ({}) => {
                 return(
                   <AkNavigationItem
                     key={index}
-                    icon={true ? <img src={item.iconUrl} /> : null}
+                    icon={ <img src={item.iconUrl} />}
                     isCompact={true}
                     isSelected={false}
                     text={item.name}
