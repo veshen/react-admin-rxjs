@@ -4,6 +4,26 @@ import TrackballControls from 'three-trackballcontrols';
 const TWEEN = require('@tweenjs/tween.js')
 
 const View = () => {
+
+/**
+ * Initialize trackball controls to control the scene
+ *
+ * @param {THREE.Camera} camera
+ * @param {THREE.Renderer} renderer
+ */
+  const initTrackballControls = (camera:any, renderer:any) => {
+    var trackballControls = new TrackballControls(camera, renderer.domElement);
+    trackballControls.rotateSpeed = 1.0;
+    trackballControls.zoomSpeed = 1.2;
+    trackballControls.panSpeed = 0.8;
+    trackballControls.noZoom = false;
+    trackballControls.noPan = false;
+    trackballControls.staticMoving = true;
+    trackballControls.dynamicDampingFactor = 0.3;
+    trackballControls.keys = [65, 83, 68];
+
+    return trackballControls;
+  }
   useEffect(()=>{
     var group:any = new THREE.Group();
 
@@ -11,16 +31,20 @@ const View = () => {
     let camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 0.01, 10 );
     camera.position.z = 2;
 
-    let markFeometry = new THREE.PlaneGeometry( 3,1);
+
+    var axes = new THREE.AxesHelper(1.6);
+    scene.add(axes);
+
+
+    //创建半透明mark
+    let markFeometry = new THREE.PlaneGeometry(3,1);
     let markMaterial = new THREE.MeshBasicMaterial({
       color : 0xffffff,
       transparent : true,
-      opacity : 0.7
+      opacity : 0
     })
     let mark:any = new THREE.Mesh( markFeometry, markMaterial );
     mark.position.z = 0.02
-    mark.visible = false;
-    // group.add(mark)
 
     let geometry = new THREE.PlaneGeometry( 0.2, 0.1);
     let material = new THREE.MeshNormalMaterial();
@@ -41,18 +65,22 @@ const View = () => {
 
     var curve = new THREE.CubicBezierCurve(
     	new THREE.Vector2( -0, 0.05 ),
-    	new THREE.Vector2( 0.2, 0.15 ),
-    	new THREE.Vector2( 0.4, 0.15 ),
+    	new THREE.Vector2( 0.26, 0.15 ),
+    	new THREE.Vector2( 0.53, 0.15 ),
     	new THREE.Vector2( 0.8, 0.05 )
     );
 
     var points = curve.getPoints( 50 );
+    var points2 = points.filter( (x,i) => i<30 );
+    console.log('points==>',points)
+    // curve.updateArcLengths()
     var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
     var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
 
     // Create the final object to add to the scene
     var curveObject = new THREE.Line( geometry_b, material_b );
     curveObject.visible = false;
+    console.log('curveObject',curveObject)
     scene.add(curveObject)
     /**
      * 创建二维样条曲线对象
@@ -93,19 +121,35 @@ const View = () => {
     let position:any, target:any, tween:any, tweenBack:any, onOff = true;
 
     function init(mesh:any) {
-			let position = {z: 0};
+			let position = { z: mesh.position.z };
 			// target = mesh;
 			tween = new TWEEN.Tween(position)
-				.to({z: 0.3}, 800)
-				.delay(1000)
-				.easing(TWEEN.Easing.Elastic.InOut)
+				.to({z: 0.4}, 800)
+				// .delay(1000)
+				.easing(TWEEN.Easing.Circular.InOut)
 				.onUpdate(()=>mesh.position.z = position.z);
 			tweenBack = new TWEEN.Tween(position)
-				.to({z: 0}, 3000)
-				.easing(TWEEN.Easing.Elastic.InOut)
-				.onUpdate(update);
+				.to({z: 0}, 800)
+				.easing(TWEEN.Easing.Circular.InOut)
+				.onUpdate(()=>mesh.position.z = position.z);
 			// tween.chain(tweenBack);
 			// tweenBack.chain(tween);
+
+
+      let opacity = { o: mesh.material.opacity };
+      let tweenOpacity = new TWEEN.Tween(opacity)
+				.to({o: 0.7}, 800)
+				.delay(100)
+				.easing(TWEEN.Easing.Cubic.InOut)
+				.onUpdate(()=>mesh.material.opacity = opacity.o);
+      let tweenOpacityBack = new TWEEN.Tween(opacity)
+				.to({o: 0}, 800)
+				.easing(TWEEN.Easing.Cubic.InOut)
+				.onUpdate(()=>mesh.material.opacity = opacity.o);
+      return{
+        tweenOpacity,
+        tweenOpacityBack,
+      }
 		}
 
     function update() {
@@ -125,34 +169,65 @@ const View = () => {
 
         // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
         raycaster.setFromCamera( mouse, camera );
-        console.log(scene,group.children )
+        // console.log(scene,group.children )
         // 获取raycaster直线和所有模型相交的数组集合
         var intersects = raycaster.intersectObjects( group.children );
         console.log(intersects);
         if (intersects.length>0) {
-
-            init(group.children[2]);
-            tween.start()
-            init(group.children[0]);
-            tween.start()
-            init(curveObject);
-            tween.start()
-
-            setTimeout(()=>{
-              mark.visible = true;
-              curveObject.visible = true;
-            },1200)
-
             // init(intersects[0]);
             // intersects[0].object.position.z += 0.1;
             if (onOff) {
                 onOff=false
+                init(group.children[2]);
+                tween.start()
+                init(group.children[0]);
+                tween.start()
+                init(curveObject);
+                tween.start()
+
+                const { tweenOpacity } = init(mark);
+                tweenOpacity.start()
+
+                setTimeout(()=>{
+                  curveObject.visible = true;
+                },200)
 
 
+            }
 
-            }else{
-                onOff=true
-                tweenBack.start();
+        }else{
+          onOff = true
+          const { tweenOpacityBack } = init(mark);
+          tweenOpacityBack.start()
+
+          init(group.children[2]);
+          tweenBack.start()
+          init(group.children[0]);
+          tweenBack.start()
+          init(curveObject);
+          tweenBack.start()
+          curveObject.visible = false;
+
+        }
+
+        var intersectsMark = raycaster.intersectObjects( [mark] );
+        if (intersectsMark.length>0) {
+
+            if (onOff===false) {
+
+                // onOff=true;
+                // const { tweenOpacityBack } = init(mark);
+                // tweenOpacityBack.start()
+                //
+                // init(group.children[2]);
+                // tweenBack.start()
+                // init(group.children[0]);
+                // tweenBack.start()
+                // init(curveObject);
+                // tweenBack.start()
+                // setTimeout(()=>{
+                //   curveObject.visible = false;
+                // },200)
             }
 
         }
@@ -171,23 +246,21 @@ const View = () => {
     renderer.setClearColor(new THREE.Color(0xf6f6f6))
   	renderer.setSize( window.innerWidth, window.innerHeight );
   	const CanvasWarp:any = document.querySelector('#container');
-    const controls = new TrackballControls( camera, renderer.domElement );
-    controls.rotateSpeed = 4.0;
-    controls.zoomSpeed = 1.2;
-    controls.panSpeed = 0.8;
-    controls.staticMoving = true;
-        controls.dynamicDampingFactor = 0.3;
-        controls.keys = [65, 83, 68];
-        controls.addEventListener('change', ()=>{renderer.render(scene, camera);});
     CanvasWarp.appendChild( renderer.domElement )
+    // attach them here, since appendChild needs to be called first
+    var trackballControls = initTrackballControls(camera, renderer);
+    var clock = new THREE.Clock();
 
-
+    console.log(group)
     animate();
     function animate() {
+      trackballControls.update(clock.getDelta());
+      // group.children.forEach( (meshItem:any) => meshItem.rotation.x += 0.01)
+      // group.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
+      // group.children.forEach( (meshItem:any) => meshItem.rotation.z += 0.01)
     	requestAnimationFrame( animate );
       TWEEN.update()
     	renderer.render( scene, camera );
-
     }
   },[])
 
