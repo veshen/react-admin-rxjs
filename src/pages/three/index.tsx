@@ -31,9 +31,9 @@ const View = () => {
     let camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 0.01, 10 );
     camera.position.z = 2;
 
-
-    var axes = new THREE.AxesHelper(1.6);
-    scene.add(axes);
+    // 坐标轴
+    // var axes = new THREE.AxesHelper(1.6);
+    // scene.add(axes);
 
 
     //创建半透明mark
@@ -71,15 +71,15 @@ const View = () => {
     );
 
     var points = curve.getPoints( 50 );
-    var points2 = points.filter( (x,i) => i<30 );
-    console.log('points==>',points)
+    var points2 = points.filter( (x,i) => i<1 );
+    // console.log('points==>',points)
     // curve.updateArcLengths()
-    var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
+    var geometry_b = new THREE.BufferGeometry().setFromPoints( points2 );
     var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
-
+    // curveObject.geometry.setFromPoints(points.slice(0,i)) //动态设置长短
     // Create the final object to add to the scene
     var curveObject = new THREE.Line( geometry_b, material_b );
-    curveObject.visible = false;
+    // curveObject.visible = false;
     console.log('curveObject',curveObject)
     scene.add(curveObject)
     /**
@@ -118,7 +118,7 @@ const View = () => {
     // } );
 
 
-    let position:any, target:any, tween:any, tweenBack:any, onOff = true;
+    let position:any, target:any, tween:any, tweenBack:any, onOff = true, lengthSlice = { l : 0 };
 
     function init(mesh:any) {
 			let position = { z: mesh.position.z };
@@ -146,9 +146,23 @@ const View = () => {
 				.to({o: 0}, 800)
 				.easing(TWEEN.Easing.Cubic.InOut)
 				.onUpdate(()=>mesh.material.opacity = opacity.o);
+
+      // let lengthSlice = { l : 0 }
+      let tweenLine = new TWEEN.Tween(lengthSlice)
+				.to({ l: points.length }, 800)
+				.delay(100)
+				.easing(TWEEN.Easing.Cubic.InOut)
+				.onUpdate(()=>mesh.geometry.setFromPoints(points.slice(0,lengthSlice.l)));
+      let tweenLineBack = new TWEEN.Tween(lengthSlice)
+				.to({ l: 0}, 800)
+				.easing(TWEEN.Easing.Cubic.InOut)
+				.onUpdate(()=>mesh.geometry.setFromPoints(points.slice(0,lengthSlice.l)));
+
       return{
         tweenOpacity,
         tweenOpacityBack,
+        tweenLine,
+        tweenLineBack
       }
 		}
 
@@ -182,14 +196,18 @@ const View = () => {
                 tween.start()
                 init(group.children[0]);
                 tween.start()
+                curveObject.visible = true;
                 init(curveObject);
                 tween.start()
+
+
 
                 const { tweenOpacity } = init(mark);
                 tweenOpacity.start()
 
                 setTimeout(()=>{
-                  curveObject.visible = true;
+                  const { tweenLine } = init(curveObject);
+                  tweenLine.start()
                 },200)
 
 
@@ -206,7 +224,11 @@ const View = () => {
           tweenBack.start()
           init(curveObject);
           tweenBack.start()
-          curveObject.visible = false;
+          setTimeout(()=>{
+            const { tweenLineBack } = init(curveObject);
+            tweenLineBack.start()
+          },200)
+          // curveObject.visible = false;
 
         }
 
@@ -254,6 +276,7 @@ const View = () => {
     console.log(group)
     animate();
     function animate() {
+      // console.log(points)
       trackballControls.update(clock.getDelta());
       // group.children.forEach( (meshItem:any) => meshItem.rotation.x += 0.01)
       // group.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
