@@ -46,7 +46,7 @@ const View = () => {
     let mark:any = new THREE.Mesh( markFeometry, markMaterial );
     mark.position.z = 0.02
 
-    let geometry = new THREE.PlaneGeometry( 0.2, 0.1);
+    let geometry = new THREE.BoxGeometry( 0.2, 0.1, 0.01);
     let material = new THREE.MeshNormalMaterial();
 
     let mesh = new THREE.Mesh( geometry, material );
