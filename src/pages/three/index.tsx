@@ -238,6 +238,8 @@ const View = () => {
         tableCardMesh.translateY(0.80)
         tableCardMesh.dependedOnBy = table.dependedOnBy;
         tableCardMesh.depends = table.depends;
+        tableCardMesh.step = i;
+
         group.add(tableCardMesh)
       })
 
@@ -253,16 +255,17 @@ const View = () => {
 
 
         // scene.add( lineA );
-        const meshArr = table.dependedOnBy.map( (id:string) => group.children.filter((m:any) => m.name === id ));
+        const meshArr = table.dependedOnBy.map( (id:string) => group.children.filter((m:any) => m.name === id )[0]);
         meshArr.forEach( (m:any) => {
           geometryLine.vertices.push(
-          	new THREE.Vector3( m[0].position.x, m[0].position.y, 0 ),
+          	new THREE.Vector3( m.position.x, m.position.y, 0 ),
             new THREE.Vector3( table.position.x, table.position.y, 0 ),
           );
-          var lineA = new THREE.Line( geometryLine, materialLine );
+          var lineA:any = new THREE.Line( geometryLine, materialLine );
           lineA.position.z = 0.01;
+
+          lineA.connect = [table.name,m.name];
           lineGroup.add(lineA)
-          console.log(lineA)
         })
         // console.log(table.name)
         // console.log(table.position.x)
@@ -271,8 +274,8 @@ const View = () => {
     })
     scene.add(stepGroup)
     scene.add(group);
-    console.log(group)
     scene.add(lineGroup)
+    console.log(lineGroup)
 
 
 
@@ -346,7 +349,7 @@ const View = () => {
 
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
-    let allItem:any = []
+    let allItem:any = [];
     let currentItem:any = null;
     function onMouseClick( event:any ) {
 
@@ -364,25 +367,29 @@ const View = () => {
             // init(intersects[0]);
             // intersects[0].object.position.z += 0.1;
             currentItem = intersects[0].object;
+            console.log(currentItem)
             if (onOff&&(currentItem.dependedOnBy.length>0||currentItem.depends.length>0)) {
                 onOff=false
 
                 let dependedOnByItem = currentItem.dependedOnBy.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
                 let dependsItem = currentItem.depends.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
-                allItem = Array.prototype.concat([],dependedOnByItem,dependsItem)
-                console.log(allItem)
+                let lineArray = lineGroup.children.filter( (line:any) => line.connect.includes(currentItem.name) )
+                console.log('lineArray',lineArray)
+                let stepTitleIndex:any = Array.from(new Set([currentItem].concat(dependedOnByItem,dependsItem).map( (item:any) => item.step )))
+                console.log('stepTitleIndex',stepTitleIndex)
+                allItem = Array.prototype.concat([],dependedOnByItem,dependsItem,lineArray,stepTitleIndex.map( (i:number) => stepGroup.children[i] ))
+                console.log('allItem',allItem)
+
 
                 init(currentItem);
-                tween.start()
-                init(lineGroup);
                 tween.start()
                 allItem.forEach( (mesh:any) => {
                   init(mesh);
                   tween.start()
                 })
 
-                init(stepGroup);
-                tween.start()
+                // init(stepGroup);
+                // tween.start()
 
                 const { tweenOpacity } = init(mark);
                 tweenOpacity.start()
@@ -393,8 +400,6 @@ const View = () => {
           onOff = true
           const { tweenOpacityBack } = init(mark);
           tweenOpacityBack.start()
-          init(lineGroup);
-          tweenBack.start()
           init(currentItem);
           tweenBack.start()
           allItem.forEach( (mesh:any) => {
@@ -402,14 +407,9 @@ const View = () => {
             tweenBack.start()
           })
 
-          // init(group.children[2]);
+
+          // init(stepGroup);
           // tweenBack.start()
-          // init(group.children[0]);
-          // tweenBack.start()
-          // init(curveObject);
-          // tweenBack.start()
-          init(stepGroup);
-          tweenBack.start()
 
 
           // setTimeout(()=>{
