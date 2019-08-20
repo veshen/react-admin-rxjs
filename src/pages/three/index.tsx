@@ -3,6 +3,106 @@ import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols';
 const TWEEN = require('@tweenjs/tween.js')
 
+const steps = [
+  {
+    name : 'step-A',
+    tables : [
+      {
+        name : '佣金基础数据',
+        type: "snapshot",
+        id: "d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17",
+        dependedOnBy: [],//被依赖项
+        depends: [] // 依赖项目
+      },
+      {
+        name : 'CA',
+        type: "snapshot",
+        id: "6d4d2f9f-5f68-40cf-98c8-bb9ba5504412",
+        dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248"],//被依赖项
+        depends: [] // 依赖项目
+      },
+      {
+        name: "商务销售毛利率区间",
+        type: "snapshot",
+        id: "a5209316-4986-4f92-95f0-5a960e2c4dd9",
+        dependedOnBy: [],
+        depends: []
+      },
+      {
+        name: "产品销售毛利率区间",
+        type: "snapshot",
+        id: "7a9f1a84-dda9-47d3-83d0-60cf1cd4d0c2",
+        dependedOnBy: [],
+        depends: []
+      },
+      {
+        name: "员工主数据表",
+        type: "snapshot",
+        id: "a758c9f7-4fc6-4c0c-a016-d9512001d19f",
+        dependedOnBy: [],
+        depends: []
+      },
+      {
+        name: "员工薪资档案表",
+        type: "snapshot",
+        id: "b6f20cbc-f67e-485f-a741-99fa50577e0a",
+        dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248"],
+        depends: []
+      },
+      {
+        name: "员工方案关系表",
+        type: "snapshot",
+        id: "3a68a786-8120-46f9-873c-441d6dfc49fd",
+        dependedOnBy: [],
+        depends: []
+      }
+    ]
+  },
+  {
+    name : 'step-B',
+    tables : [
+      {
+        name: "2018Q1",
+        type: "data",
+        id: "98599b77-2b85-4145-837e-3c6ec1f437c1",
+        dependedOnBy: [],
+        depends: []
+      }
+    ]
+  },
+  {
+    name : 'step-C',
+    tables : [
+      {
+        name : 'table-3',
+        type : "param",
+        id: "98599b77-2b85-4145-837e-3c6ec1f437c2",
+        dependedOnBy: [],
+        depends: []
+      }
+    ]
+  },
+  {
+    name : 'step-D',
+    tables : [
+      {
+        name: "CA02",
+        type: "data",
+        id: "880369e2-f0b2-4854-bd39-589537da6248",
+        dependedOnBy: [],
+        depends: ["f89d3700-9d82-4dfe-a08e-c0d3457cf91a", "6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a"]
+      },
+      {
+        name: "Monthly Revenue",
+        type: "data",
+        id: "f89d3700-9d82-4dfe-a08e-c0d3457cf91a",
+        dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248"],
+        depends: []
+      }
+    ]
+  }
+]
+
 const View = () => {
 
 /**
@@ -25,11 +125,20 @@ const View = () => {
     return trackballControls;
   }
   useEffect(()=>{
-    var group:any = new THREE.Group();
 
     let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 0.01, 10 );
-    camera.position.z = 2;
+    let camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 1, 10000 );
+    // let camera = new THREE.OrthographicCamera(
+    //   -4,
+    //   4,
+    //   3,
+    //   -3,
+    //   0,
+    //   100
+    // );
+    // camera.position.z = 200;
+    camera.position.set(0,0,3)
+    camera.lookAt(scene.position);
 
     // 坐标轴
     // var axes = new THREE.AxesHelper(1.6);
@@ -37,7 +146,7 @@ const View = () => {
 
 
     //创建半透明mark
-    let markFeometry = new THREE.PlaneGeometry(3,1);
+    let markFeometry = new THREE.PlaneGeometry(6,4);
     let markMaterial = new THREE.MeshBasicMaterial({
       color : 0xffffff,
       transparent : true,
@@ -46,21 +155,6 @@ const View = () => {
     let mark:any = new THREE.Mesh( markFeometry, markMaterial );
     mark.position.z = 0.02
 
-    let geometry = new THREE.BoxGeometry( 0.2, 0.1, 0.01);
-    let material = new THREE.MeshNormalMaterial();
-
-    let mesh = new THREE.Mesh( geometry, material );
-    mesh.name = "mesh1"
-    let mesh2 = new THREE.Mesh( geometry, material );
-    let mesh3 = new THREE.Mesh( geometry, material );
-    mesh2.name = "mesh2"
-
-    mesh2.position.x = 0.4;
-    mesh3.position.x = 0.8;
-    group.add(mesh)
-    group.add(mesh2)
-    group.add(mesh3)
-    scene.add( group );
     scene.add( mark );
 
     var curve = new THREE.CubicBezierCurve(
@@ -100,31 +194,109 @@ const View = () => {
     // scene.add(line);//线条对象添加到场景中
 
     /*字体*/
-    // var loader = new THREE.FontLoader();
-    //
-    // loader.load( 'fonts/optimer_bold.typeface.json', function ( font ) {
-    //
-    // 	var geometryFont = new THREE.TextGeometry( 'Hello three.js!', {
-    // 		font: font,
-    // 		size: 80,
-    // 		height: 5,
-    // 		curveSegments: 12,
-    // 		bevelEnabled: true,
-    // 		bevelThickness: 10,
-    // 		bevelSize: 8,
-    // 		bevelSegments: 5
-    // 	} );
-    //   // scene.add(geometryFont)
-    // } );
+    var loader = new THREE.FontLoader();
+    var font = loader.parse(require('./fonts1/optimer_bold.typeface.json'));
+    var stepGroup:any = new THREE.Group();
+    var group:any = new THREE.Group();
+
+    steps.forEach( ( item, i ) => {
+      //创建step
+      let geometryFont:any = new THREE.TextGeometry( item.name, {
+        font: font,
+        size: 0.06,
+        height: 0.0001,
+      } );
+      let textMaterial = new THREE.MeshBasicMaterial({
+        color: 0x000000
+      })
+      let textMesh = new THREE.Mesh(geometryFont,textMaterial)
+      textMesh.position.x = 0.6*i;
+      textMesh.translateX(-2)
+      textMesh.position.y = 1;
+      textMesh.position.z = 0;
+      stepGroup.add(textMesh)
+
+      let geometry = new THREE.BoxGeometry( 0.3, 0.15, 0.01);
+      let material = new THREE.MeshBasicMaterial()
+
+      item.tables.forEach( (table:any,index:number) => {
+        //使用材质颜色区分不同的表
+        if (table.type==='snapshot') {
+          material.color = new THREE.Color(0xffe596);
+        }
+        if (table.type==='param') {
+          material.color = new THREE.Color(0x7ce6e0);
+        }
+        if (table.type==='data') {
+          material.color = new THREE.Color(0xabdbff);
+        }
+        let tableCardMesh:any = new THREE.Mesh( geometry, material );
+        tableCardMesh.name = table.id;
+        tableCardMesh.position.x = i * 0.6;
+        tableCardMesh.position.y = index * - 0.2;
+        tableCardMesh.translateX(-1.88)
+        tableCardMesh.translateY(0.80)
+        tableCardMesh.dependedOnBy = table.dependedOnBy;
+        tableCardMesh.depends = table.depends;
+        group.add(tableCardMesh)
+      })
+
+    })
+
+    var lineGroup:any = new THREE.Group();
+    var materialLine = new THREE.LineBasicMaterial({
+    	color: 0x0000ff
+    });
+    group.children.forEach( (table:any) => {
+      if (table.dependedOnBy.length>0) {
+        var geometryLine = new THREE.Geometry();
 
 
-    let position:any, target:any, tween:any, tweenBack:any, onOff = true, lengthSlice = { l : 0 };
+        // scene.add( lineA );
+        const meshArr = table.dependedOnBy.map( (id:string) => group.children.filter((m:any) => m.name === id ));
+        meshArr.forEach( (m:any) => {
+          geometryLine.vertices.push(
+          	new THREE.Vector3( m[0].position.x, m[0].position.y, 0 ),
+            new THREE.Vector3( table.position.x, table.position.y, 0 ),
+          );
+          var lineA = new THREE.Line( geometryLine, materialLine );
+          lineA.position.z = 0.01;
+          lineGroup.add(lineA)
+          console.log(lineA)
+        })
+        // console.log(table.name)
+        // console.log(table.position.x)
+        // console.log(table.position.y)
+      }
+    })
+    scene.add(stepGroup)
+    scene.add(group);
+    console.log(group)
+    scene.add(lineGroup)
+
+
+
+
+    // debugger
+    //依赖关系线段计算
+    // steps.forEach( step => {
+    //   step.tables.forEach( table => {
+    //     if (table.dependedOnBy.length>0) {
+    //       console.log(table.name)
+    //       table.dependedOnBy.forEach( item => {
+    //         console.log(item)
+    //       })
+    //     }
+    //   })
+    // })
+
+    let position:any, target:any, tween:any, tweenBack:any, onOff = true, lengthSlice = { l : 0 }, opacity ={ o : 0};
 
     function init(mesh:any) {
 			let position = { z: mesh.position.z };
 			// target = mesh;
 			tween = new TWEEN.Tween(position)
-				.to({z: 0.4}, 800)
+				.to({z: 0.2}, 800)
 				// .delay(1000)
 				.easing(TWEEN.Easing.Circular.InOut)
 				.onUpdate(()=>mesh.position.z = position.z);
@@ -136,7 +308,7 @@ const View = () => {
 			// tweenBack.chain(tween);
 
 
-      let opacity = { o: mesh.material.opacity };
+      // let opacity = { o : mesh.material.opacity };
       let tweenOpacity = new TWEEN.Tween(opacity)
 				.to({o: 0.7}, 800)
 				.delay(100)
@@ -174,6 +346,8 @@ const View = () => {
 
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
+    let allItem:any = []
+    let currentItem:any = null;
     function onMouseClick( event:any ) {
 
         //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
@@ -186,30 +360,32 @@ const View = () => {
         // console.log(scene,group.children )
         // 获取raycaster直线和所有模型相交的数组集合
         var intersects = raycaster.intersectObjects( group.children );
-        console.log(intersects);
         if (intersects.length>0) {
             // init(intersects[0]);
             // intersects[0].object.position.z += 0.1;
-            if (onOff) {
+            currentItem = intersects[0].object;
+            if (onOff&&(currentItem.dependedOnBy.length>0||currentItem.depends.length>0)) {
                 onOff=false
-                init(group.children[2]);
-                tween.start()
-                init(group.children[0]);
-                tween.start()
-                curveObject.visible = true;
-                init(curveObject);
-                tween.start()
 
+                let dependedOnByItem = currentItem.dependedOnBy.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
+                let dependsItem = currentItem.depends.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
+                allItem = Array.prototype.concat([],dependedOnByItem,dependsItem)
+                console.log(allItem)
 
+                init(currentItem);
+                tween.start()
+                init(lineGroup);
+                tween.start()
+                allItem.forEach( (mesh:any) => {
+                  init(mesh);
+                  tween.start()
+                })
+
+                init(stepGroup);
+                tween.start()
 
                 const { tweenOpacity } = init(mark);
                 tweenOpacity.start()
-
-                setTimeout(()=>{
-                  const { tweenLine } = init(curveObject);
-                  tweenLine.start()
-                },200)
-
 
             }
 
@@ -217,17 +393,29 @@ const View = () => {
           onOff = true
           const { tweenOpacityBack } = init(mark);
           tweenOpacityBack.start()
+          init(lineGroup);
+          tweenBack.start()
+          init(currentItem);
+          tweenBack.start()
+          allItem.forEach( (mesh:any) => {
+            init(mesh);
+            tweenBack.start()
+          })
 
-          init(group.children[2]);
+          // init(group.children[2]);
+          // tweenBack.start()
+          // init(group.children[0]);
+          // tweenBack.start()
+          // init(curveObject);
+          // tweenBack.start()
+          init(stepGroup);
           tweenBack.start()
-          init(group.children[0]);
-          tweenBack.start()
-          init(curveObject);
-          tweenBack.start()
-          setTimeout(()=>{
-            const { tweenLineBack } = init(curveObject);
-            tweenLineBack.start()
-          },200)
+
+
+          // setTimeout(()=>{
+          //   const { tweenLineBack } = init(curveObject);
+          //   tweenLineBack.start()
+          // },200)
           // curveObject.visible = false;
 
         }
@@ -273,12 +461,15 @@ const View = () => {
     var trackballControls = initTrackballControls(camera, renderer);
     var clock = new THREE.Clock();
 
-    console.log(group)
+    // console.log(stepGroup)
     animate();
     function animate() {
+
       // console.log(points)
       trackballControls.update(clock.getDelta());
-      // group.children.forEach( (meshItem:any) => meshItem.rotation.x += 0.01)
+      // stepGroup.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
+      // stepGroup.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
+      // stepGroup.children.forEach( (meshItem:any) => meshItem.rotation.z += 0.01)
       // group.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
       // group.children.forEach( (meshItem:any) => meshItem.rotation.z += 0.01)
     	requestAnimationFrame( animate );
