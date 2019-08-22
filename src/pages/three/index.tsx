@@ -11,7 +11,7 @@ const steps = [
         name : '佣金基础数据',
         type: "snapshot",
         id: "d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17",
-        dependedOnBy: [],//被依赖项
+        dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248","98599b77-2b85-4145-837e-3c6ec1f437c2"],//被依赖项
         depends: [] // 依赖项目
       },
       {
@@ -65,7 +65,7 @@ const steps = [
         name: "2018Q1",
         type: "data",
         id: "98599b77-2b85-4145-837e-3c6ec1f437c1",
-        dependedOnBy: [],
+        dependedOnBy: ["98599b77-2b85-4145-837e-3c6ec1f437c2"],
         depends: []
       }
     ]
@@ -78,7 +78,7 @@ const steps = [
         type : "param",
         id: "98599b77-2b85-4145-837e-3c6ec1f437c2",
         dependedOnBy: [],
-        depends: []
+        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17","98599b77-2b85-4145-837e-3c6ec1f437c1"]
       }
     ]
   },
@@ -90,7 +90,7 @@ const steps = [
         type: "data",
         id: "880369e2-f0b2-4854-bd39-589537da6248",
         dependedOnBy: [],
-        depends: ["f89d3700-9d82-4dfe-a08e-c0d3457cf91a", "6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a"]
+        depends: ["f89d3700-9d82-4dfe-a08e-c0d3457cf91a", "6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a","d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
       },
       {
         name: "Monthly Revenue",
@@ -165,17 +165,17 @@ const View = () => {
     );
 
     var points = curve.getPoints( 50 );
-    var points2 = points.filter( (x,i) => i<1 );
+    // var points2 = points.filter( (x,i) => i<1 );
     // console.log('points==>',points)
     // curve.updateArcLengths()
-    var geometry_b = new THREE.BufferGeometry().setFromPoints( points2 );
+    var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
     var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
     // curveObject.geometry.setFromPoints(points.slice(0,i)) //动态设置长短
     // Create the final object to add to the scene
     var curveObject = new THREE.Line( geometry_b, material_b );
     // curveObject.visible = false;
     console.log('curveObject',curveObject)
-    scene.add(curveObject)
+    // scene.add(curveObject)
     /**
      * 创建二维样条曲线对象
      */
@@ -250,48 +250,64 @@ const View = () => {
     	color: 0x0000ff
     });
     group.children.forEach( (table:any) => {
+
+      //被依赖项
       if (table.dependedOnBy.length>0) {
         var geometryLine = new THREE.Geometry();
-
-
         // scene.add( lineA );
         const meshArr = table.dependedOnBy.map( (id:string) => group.children.filter((m:any) => m.name === id )[0]);
         meshArr.forEach( (m:any) => {
-          geometryLine.vertices.push(
-          	new THREE.Vector3( m.position.x, m.position.y, 0 ),
-            new THREE.Vector3( table.position.x, table.position.y, 0 ),
-          );
-          var lineA:any = new THREE.Line( geometryLine, materialLine );
-          lineA.position.z = 0.01;
 
-          lineA.connect = [table.name,m.name];
-          lineGroup.add(lineA)
+          let startX = table.position.x;
+          let startY = table.position.y;
+          let endX  = m.position.x;
+          let endY  = m.position.y;
+          console.log('265=====> YYY',startY,endY)
+          console.log('266=====> XXX',startX,endX)
+
+          if ( startY===endY && m.step>table.step && (m.step - table.step === 1)) {
+            console.log('水平 跨单步骤依赖',startX,endX)
+            startX = startX + table.geometry.parameters.width/2;
+            endX  = endX - table.geometry.parameters.width/2
+          }
+          geometryLine.vertices.push(
+            new THREE.Vector3( startX, startY, 0 ), //起点
+            new THREE.Vector3( endX, endY, 0 ), //终点
+          );
+          var line:any = new THREE.Line( geometryLine, materialLine );
+          if ( startY===endY && m.step>table.step && (m.step - table.step > 1)) {
+
+            startY = startY + table.geometry.parameters.height/2;
+            endY  = endY + table.geometry.parameters.height/2
+
+            // console.log(table.geometry.parameters.height/2)
+
+            // console.log('水平 跨步骤依赖',startX,endX)
+            var curve = new THREE.CubicBezierCurve(
+            	new THREE.Vector2( startX, startY ),
+            	new THREE.Vector2( (startX-endX)/3*2+endX, startY+0.1 ),
+            	new THREE.Vector2( (startX-endX)/3+endX, endY+0.1 ),
+            	new THREE.Vector2( endX, endY )
+            );
+            // console.log('curve',curve)
+            var points = curve.getPoints( 50 );
+            var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
+            var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
+            line = new THREE.Line( geometry_b, material_b );
+            // lineGroup.add(curveObject)
+
+          }
+
+          line.position.z = 0.01;
+          line.connect = [table.name,m.name];
+          lineGroup.add(line)
         })
-        // console.log(table.name)
-        // console.log(table.position.x)
-        // console.log(table.position.y)
       }
     })
     scene.add(stepGroup)
     scene.add(group);
     scene.add(lineGroup)
-    console.log(lineGroup)
 
-
-
-
-    // debugger
-    //依赖关系线段计算
-    // steps.forEach( step => {
-    //   step.tables.forEach( table => {
-    //     if (table.dependedOnBy.length>0) {
-    //       console.log(table.name)
-    //       table.dependedOnBy.forEach( item => {
-    //         console.log(item)
-    //       })
-    //     }
-    //   })
-    // })
 
     let position:any, target:any, tween:any, tweenBack:any, onOff = true, lengthSlice = { l : 0 }, opacity ={ o : 0};
 
@@ -313,7 +329,7 @@ const View = () => {
 
       // let opacity = { o : mesh.material.opacity };
       let tweenOpacity = new TWEEN.Tween(opacity)
-				.to({o: 0.7}, 800)
+				.to({o: 0.88}, 800)
 				.delay(100)
 				.easing(TWEEN.Easing.Cubic.InOut)
 				.onUpdate(()=>mesh.material.opacity = opacity.o);
@@ -350,7 +366,7 @@ const View = () => {
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
     let allItem:any = [];
-    let currentItem:any = null;
+    let currentItem:any = { position:{} };
     function onMouseClick( event:any ) {
 
         //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
@@ -367,7 +383,7 @@ const View = () => {
             // init(intersects[0]);
             // intersects[0].object.position.z += 0.1;
             currentItem = intersects[0].object;
-            console.log(currentItem)
+            console.log('currentItem',currentItem)
             if (onOff&&(currentItem.dependedOnBy.length>0||currentItem.depends.length>0)) {
                 onOff=false
 
