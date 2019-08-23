@@ -11,8 +11,8 @@ const steps = [
         name : '佣金基础数据',
         type: "snapshot",
         id: "d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17",
-        dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248","98599b77-2b85-4145-837e-3c6ec1f437c2"],//被依赖项
-        depends: [] // 依赖项目
+        dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248","98599b77-2b85-4145-837e-3c6ec1f437c2","3a68a786-8120-46f9-873c-441d6dfc49fd"],//被依赖项
+        depends: ["98599b77-2b85-4145-837e-3c6ec1f437c1"] // 依赖项目
       },
       {
         name : 'CA',
@@ -26,20 +26,20 @@ const steps = [
         type: "snapshot",
         id: "a5209316-4986-4f92-95f0-5a960e2c4dd9",
         dependedOnBy: [],
-        depends: []
+        depends: ["a758c9f7-4fc6-4c0c-a016-d9512001d19f","f89d3700-9d82-4dfe-a08e-c0d3457cf91a"]
       },
       {
         name: "产品销售毛利率区间",
         type: "snapshot",
         id: "7a9f1a84-dda9-47d3-83d0-60cf1cd4d0c2",
         dependedOnBy: [],
-        depends: []
+        depends: ["98599b77-2b85-4145-837e-3c6ec1f437c2"]
       },
       {
         name: "员工主数据表",
         type: "snapshot",
         id: "a758c9f7-4fc6-4c0c-a016-d9512001d19f",
-        dependedOnBy: [],
+        dependedOnBy: ["a5209316-4986-4f92-95f0-5a960e2c4dd9"],
         depends: []
       },
       {
@@ -54,7 +54,7 @@ const steps = [
         type: "snapshot",
         id: "3a68a786-8120-46f9-873c-441d6dfc49fd",
         dependedOnBy: [],
-        depends: []
+        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
       }
     ]
   },
@@ -65,7 +65,7 @@ const steps = [
         name: "2018Q1",
         type: "data",
         id: "98599b77-2b85-4145-837e-3c6ec1f437c1",
-        dependedOnBy: ["98599b77-2b85-4145-837e-3c6ec1f437c2"],
+        dependedOnBy: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"],
         depends: []
       }
     ]
@@ -77,8 +77,8 @@ const steps = [
         name : 'table-3',
         type : "param",
         id: "98599b77-2b85-4145-837e-3c6ec1f437c2",
-        dependedOnBy: [],
-        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17","98599b77-2b85-4145-837e-3c6ec1f437c1"]
+        dependedOnBy: ["7a9f1a84-dda9-47d3-83d0-60cf1cd4d0c2"],
+        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
       }
     ]
   },
@@ -90,13 +90,13 @@ const steps = [
         type: "data",
         id: "880369e2-f0b2-4854-bd39-589537da6248",
         dependedOnBy: [],
-        depends: ["f89d3700-9d82-4dfe-a08e-c0d3457cf91a", "6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a","d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
+        depends: ["f89d3700-9d82-4dfe-a08e-c0d3457cf91a","6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a","d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
       },
       {
         name: "Monthly Revenue",
         type: "data",
         id: "f89d3700-9d82-4dfe-a08e-c0d3457cf91a",
-        dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248"],
+        dependedOnBy: ["a5209316-4986-4f92-95f0-5a960e2c4dd9","880369e2-f0b2-4854-bd39-589537da6248"],
         depends: []
       }
     ]
@@ -139,7 +139,11 @@ const View = () => {
     // camera.position.z = 200;
     camera.position.set(0,0,3)
     camera.lookAt(scene.position);
-
+    var geometryTorus = new THREE.TorusGeometry( 0.01, 0.004 , 8, 100 );
+    var materialTorus = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+    var torus = new THREE.Mesh( geometryTorus, materialTorus );
+    // torus.position.set(0,0,0)
+    // scene.add( torus );
     // 坐标轴
     // var axes = new THREE.AxesHelper(1.6);
     // scene.add(axes);
@@ -236,9 +240,10 @@ const View = () => {
         tableCardMesh.position.y = index * - 0.2;
         tableCardMesh.translateX(-1.88)
         tableCardMesh.translateY(0.80)
-        tableCardMesh.dependedOnBy = table.dependedOnBy;
-        tableCardMesh.depends = table.depends;
+        tableCardMesh.dependedOnBy = JSON.parse(JSON.stringify(table.dependedOnBy));
+        tableCardMesh.depends = JSON.parse(JSON.stringify(table.depends));
         tableCardMesh.step = i;
+        tableCardMesh.subIndex = index;
 
         group.add(tableCardMesh)
       })
@@ -254,39 +259,73 @@ const View = () => {
       //被依赖项
       if (table.dependedOnBy.length>0) {
         var geometryLine = new THREE.Geometry();
-        // scene.add( lineA );
+        //find dependedOnByTable byId
         const meshArr = table.dependedOnBy.map( (id:string) => group.children.filter((m:any) => m.name === id )[0]);
+        if (table.name==="f89d3700-9d82-4dfe-a08e-c0d3457cf91a") {
+            console.log('meshArr',meshArr)
+        }
         meshArr.forEach( (m:any) => {
 
           let startX = table.position.x;
           let startY = table.position.y;
           let endX  = m.position.x;
           let endY  = m.position.y;
-          console.log('265=====> YYY',startY,endY)
-          console.log('266=====> XXX',startX,endX)
+          // console.log('265=====> YYY',startY,endY)
+          // console.log('266=====> XXX',startX,endX)
 
-          if ( startY===endY && m.step>table.step && (m.step - table.step === 1)) {
-            console.log('水平 跨单步骤依赖',startX,endX)
-            startX = startX + table.geometry.parameters.width/2;
-            endX  = endX - table.geometry.parameters.width/2
+          if (startY!==endY&&startX!==endX) {
+            console.log('斜线')
+            if (startX>endX) {
+              startX = startX - table.geometry.parameters.width/2;
+              endX  = endX + table.geometry.parameters.width/2
+            }else{
+              startX = startX + table.geometry.parameters.width/2;
+              endX  = endX - table.geometry.parameters.width/2;
+            }
           }
+
+          // 水平跨单步骤依赖
+          if ( startY===endY && (Math.abs(m.step - table.step) === 1)) {
+            if (m.step>table.step) {
+              startX = startX + table.geometry.parameters.width/2;
+              endX  = endX - table.geometry.parameters.width/2
+            }else{
+              startX = startX - table.geometry.parameters.width/2;
+              endX  = endX + table.geometry.parameters.width/2
+            }
+          }
+
+          //垂直跨单表依赖关系
+          if (startX===endX && (Math.abs(m.subIndex - table.subIndex) === 1)) {
+              console.log('垂直依赖关系')
+
+              if (startY>endY) {
+                startY = startY - table.geometry.parameters.height/2;
+                endY  = endY + table.geometry.parameters.height/2
+              }else{
+                startY = startY + table.geometry.parameters.height/2;
+                endY  = endY - table.geometry.parameters.height/2
+              }
+
+
+          }
+
           geometryLine.vertices.push(
             new THREE.Vector3( startX, startY, 0 ), //起点
             new THREE.Vector3( endX, endY, 0 ), //终点
           );
           var line:any = new THREE.Line( geometryLine, materialLine );
-          if ( startY===endY && m.step>table.step && (m.step - table.step > 1)) {
 
-            startY = startY + table.geometry.parameters.height/2;
-            endY  = endY + table.geometry.parameters.height/2
+          //垂直跨多表依赖关系
+          if (startX===endX && (Math.abs(m.subIndex - table.subIndex) > 1)) {
+            //多表
+            startX = startX - table.geometry.parameters.width/2;
+            endX  = endX - table.geometry.parameters.width/2;
 
-            // console.log(table.geometry.parameters.height/2)
-
-            // console.log('水平 跨步骤依赖',startX,endX)
             var curve = new THREE.CubicBezierCurve(
             	new THREE.Vector2( startX, startY ),
-            	new THREE.Vector2( (startX-endX)/3*2+endX, startY+0.1 ),
-            	new THREE.Vector2( (startX-endX)/3+endX, endY+0.1 ),
+              new THREE.Vector2( startX-0.03*(m.subIndex+1), (startY-endY)/3*2+endY ),
+            	new THREE.Vector2( startX-0.03*(m.subIndex+1), (startY-endY)/3+endY ),
             	new THREE.Vector2( endX, endY )
             );
             // console.log('curve',curve)
@@ -294,21 +333,43 @@ const View = () => {
             var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
             var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
             line = new THREE.Line( geometry_b, material_b );
-            // lineGroup.add(curveObject)
+          }
+
+          // 水平跨步骤依赖
+          if ( startY===endY && (Math.abs(m.step - table.step) > 1 )) {
+
+            startY = startY + table.geometry.parameters.height/2;
+            endY  = endY + table.geometry.parameters.height/2
+
+            var curve = new THREE.CubicBezierCurve(
+            	new THREE.Vector2( startX, startY ),
+            	new THREE.Vector2( (startX-endX)/3*2+endX, startY+0.03*(m.step+1) ),
+            	new THREE.Vector2( (startX-endX)/3+endX, endY+0.03*(m.step+1) ),
+            	new THREE.Vector2( endX, endY )
+            );
+
+            var points = curve.getPoints( 50 );
+            var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
+            var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
+            line = new THREE.Line( geometry_b, material_b );
 
           }
 
+
+
           line.position.z = 0.01;
           line.connect = [table.name,m.name];
+          let torusCopy:any = torus.clone();
+          torusCopy.position.set(endX,endY,0)
+          line.add(torusCopy)
           lineGroup.add(line)
         })
       }
     })
     scene.add(stepGroup)
-    scene.add(group);
     scene.add(lineGroup)
-
-
+    scene.add(group);
+    console.log('lineGroup',lineGroup)
     let position:any, target:any, tween:any, tweenBack:any, onOff = true, lengthSlice = { l : 0 }, opacity ={ o : 0};
 
     function init(mesh:any) {
@@ -386,11 +447,13 @@ const View = () => {
             console.log('currentItem',currentItem)
             if (onOff&&(currentItem.dependedOnBy.length>0||currentItem.depends.length>0)) {
                 onOff=false
-
+                // 被依赖项目
                 let dependedOnByItem = currentItem.dependedOnBy.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
+                // 依赖项
                 let dependsItem = currentItem.depends.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
+                // 线
                 let lineArray = lineGroup.children.filter( (line:any) => line.connect.includes(currentItem.name) )
-                console.log('lineArray',lineArray)
+                console.log('lineArray',lineArray,dependedOnByItem,dependsItem)
                 let stepTitleIndex:any = Array.from(new Set([currentItem].concat(dependedOnByItem,dependsItem).map( (item:any) => item.step )))
                 console.log('stepTitleIndex',stepTitleIndex)
                 allItem = Array.prototype.concat([],dependedOnByItem,dependsItem,lineArray,stepTitleIndex.map( (i:number) => stepGroup.children[i] ))
