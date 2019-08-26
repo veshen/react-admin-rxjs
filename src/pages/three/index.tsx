@@ -26,7 +26,7 @@ const steps = [
         type: "snapshot",
         id: "a5209316-4986-4f92-95f0-5a960e2c4dd9",
         dependedOnBy: [],
-        depends: ["a758c9f7-4fc6-4c0c-a016-d9512001d19f","f89d3700-9d82-4dfe-a08e-c0d3457cf91a"]
+        depends: ["a758c9f7-4fc6-4c0c-a016-d9512001d19f"]
       },
       {
         name: "产品销售毛利率区间",
@@ -79,6 +79,27 @@ const steps = [
         id: "98599b77-2b85-4145-837e-3c6ec1f437c2",
         dependedOnBy: ["7a9f1a84-dda9-47d3-83d0-60cf1cd4d0c2"],
         depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
+      },
+      {
+        name : 'CA',
+        type: "snapshot",
+        id: "6d4d2f9f-5123f68-40cf-98c8-bb9ba5asd504412",
+        dependedOnBy: [],//被依赖项
+        depends: [] // 依赖项目
+      },
+      {
+        name: "CA02",
+        type: "data",
+        id: "880369e2-f0b2-4854-bd39-589537da624812312312312",
+        dependedOnBy: [],
+        depends: []
+      },
+      {
+        name: "CA02",
+        type: "data",
+        id: "880369e2-f0b2-4854-bd39-589537da6248",
+        dependedOnBy: [],
+        depends: ["6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a","d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
       }
     ]
   },
@@ -88,15 +109,8 @@ const steps = [
       {
         name: "CA02",
         type: "data",
-        id: "880369e2-f0b2-4854-bd39-589537da6248",
+        id: "880369e2-f0b2-4854-bd39-589537da6248123123",
         dependedOnBy: [],
-        depends: ["f89d3700-9d82-4dfe-a08e-c0d3457cf91a","6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a","d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
-      },
-      {
-        name: "Monthly Revenue",
-        type: "data",
-        id: "f89d3700-9d82-4dfe-a08e-c0d3457cf91a",
-        dependedOnBy: ["a5209316-4986-4f92-95f0-5a960e2c4dd9","880369e2-f0b2-4854-bd39-589537da6248"],
         depends: []
       }
     ]
@@ -128,26 +142,17 @@ const View = () => {
 
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 1, 10000 );
-    // let camera = new THREE.OrthographicCamera(
-    //   -4,
-    //   4,
-    //   3,
-    //   -3,
-    //   0,
-    //   100
-    // );
-    // camera.position.z = 200;
     camera.position.set(0,0,3)
     camera.lookAt(scene.position);
+
+    //终点圆环
     var geometryTorus = new THREE.TorusGeometry( 0.01, 0.004 , 8, 100 );
-    var materialTorus = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+    var materialTorus = new THREE.MeshBasicMaterial( { color: 0x666666 } );
     var torus = new THREE.Mesh( geometryTorus, materialTorus );
-    // torus.position.set(0,0,0)
-    // scene.add( torus );
+
     // 坐标轴
     // var axes = new THREE.AxesHelper(1.6);
     // scene.add(axes);
-
 
     //创建半透明mark
     let markFeometry = new THREE.PlaneGeometry(6,4);
@@ -160,7 +165,7 @@ const View = () => {
     mark.position.z = 0.02
 
     scene.add( mark );
-
+/**
     var curve = new THREE.CubicBezierCurve(
     	new THREE.Vector2( -0, 0.05 ),
     	new THREE.Vector2( 0.26, 0.15 ),
@@ -180,23 +185,8 @@ const View = () => {
     // curveObject.visible = false;
     console.log('curveObject',curveObject)
     // scene.add(curveObject)
-    /**
-     * 创建二维样条曲线对象
-     */
-    var path = new THREE.Path();//创建Path对象
-    path.moveTo (0.1,0);//设置起点
-    path.splineThru([//样条曲线经过的顶点
-        new THREE.Vector2(0.15,0),
-        new THREE.Vector2(0.2,0)
-    ]);
-    //返回几何体对象，设置细分数
-    var geometryLine = path.createPointsGeometry(25);
-    var materialLine =new THREE.LineBasicMaterial({
-        color:0xff0000 //线条颜色
-    });//材质对象
-    // var line=new THREE.Line(geometryLine,materialLine);//线条模型对象
-    // scene.add(line);//线条对象添加到场景中
 
+**/
     /*字体*/
     var loader = new THREE.FontLoader();
     var font = loader.parse(require('./fonts1/optimer_bold.typeface.json'));
@@ -215,152 +205,189 @@ const View = () => {
       })
       let textMesh = new THREE.Mesh(geometryFont,textMaterial)
       textMesh.position.x = 0.6*i;
-      textMesh.translateX(-2)
+      textMesh.translateX(-steps.length*0.25)
       textMesh.position.y = 1;
       textMesh.position.z = 0;
       stepGroup.add(textMesh)
 
-      let geometry = new THREE.BoxGeometry( 0.3, 0.15, 0.01);
-      let material = new THREE.MeshBasicMaterial()
+      let geometry = new THREE.BoxGeometry( 0.36, 0.15, 0.01);
+
 
       item.tables.forEach( (table:any,index:number) => {
+        let material = new THREE.MeshBasicMaterial()
         //使用材质颜色区分不同的表
         if (table.type==='snapshot') {
-          material.color = new THREE.Color(0xffe596);
+          material.color = new THREE.Color(0xFFB02E);
         }
         if (table.type==='param') {
           material.color = new THREE.Color(0x7ce6e0);
         }
         if (table.type==='data') {
-          material.color = new THREE.Color(0xabdbff);
+          material.color = new THREE.Color(0x1D84FF);
         }
         let tableCardMesh:any = new THREE.Mesh( geometry, material );
         tableCardMesh.name = table.id;
         tableCardMesh.position.x = i * 0.6;
-        tableCardMesh.position.y = index * - 0.2;
-        tableCardMesh.translateX(-1.88)
+        tableCardMesh.position.y = index * - 0.26;
+        tableCardMesh.translateX(-steps.length*0.22)
         tableCardMesh.translateY(0.80)
         tableCardMesh.dependedOnBy = JSON.parse(JSON.stringify(table.dependedOnBy));
         tableCardMesh.depends = JSON.parse(JSON.stringify(table.depends));
         tableCardMesh.step = i;
         tableCardMesh.subIndex = index;
-
+        let geometryFontB:any = new THREE.TextGeometry( 'aaabbb', {
+          font: font,
+          size: 0.04,
+          height: 0.0001,
+        } );
+        let textMaterialB = new THREE.MeshBasicMaterial({
+          color: 0xffffff
+        })
+        let textMeshB = new THREE.Mesh(geometryFontB,textMaterialB);
+        textMeshB.position.set(-0.12,-0.02,0.01)
+        // textMeshB.translateY(-.1);
+        tableCardMesh.add(textMeshB)
         group.add(tableCardMesh)
       })
 
     })
 
     var lineGroup:any = new THREE.Group();
-    var materialLine = new THREE.LineBasicMaterial({
-    	color: 0x0000ff
-    });
-    group.children.forEach( (table:any) => {
 
+    group.children.forEach( (table:any) => {
+      let rightCenter = (startX:any,endX:any,table:any) => {
+        return {
+          startX : startX + table.geometry.parameters.width/2,
+          endX  : endX - table.geometry.parameters.width/2 - 0.02
+        }
+      }
+      let leftCenter = (startX:any,endX:any,table:any) => {
+        return {
+          startX : startX - table.geometry.parameters.width/2,
+          endX  : endX + table.geometry.parameters.width/2 + 0.02
+        }
+      }
+      let bottomCenter = (startY:any,endY:any,table:any) => {
+        return {
+          startY : startY - table.geometry.parameters.height/2,
+          endY  : endY + table.geometry.parameters.height/2 + 0.02
+        }
+      }
+      let topCenter = (startY:any,endY:any,table:any) => {
+        return {
+          startY : startY + table.geometry.parameters.height/2,
+          endY  : endY - table.geometry.parameters.height/2 - 0.02
+        }
+      }
+      let alignLeft = (startX:any,endX:any,table:any) => {
+        return{
+          startX : startX - table.geometry.parameters.width/2,
+          endX  : endX - table.geometry.parameters.width/2 - 0.02
+        }
+      }
+      let alignTop = (startY:any,endY:any,table:any) => {
+        return{
+          startY : startY + table.geometry.parameters.height/2,
+          endY  : endY + table.geometry.parameters.height/2 + 0.02
+        }
+      }
+      let createBezierLine = (curve:any) => {
+        var points = curve.getPoints( 50 );
+        var geometry = new THREE.BufferGeometry().setFromPoints( points );
+        var material = new THREE.LineBasicMaterial( { color : 0x666666 } );
+        return new THREE.Line( geometry, material );
+      }
       //被依赖项
       if (table.dependedOnBy.length>0) {
-        var geometryLine = new THREE.Geometry();
+
         //find dependedOnByTable byId
         const meshArr = table.dependedOnBy.map( (id:string) => group.children.filter((m:any) => m.name === id )[0]);
-        if (table.name==="f89d3700-9d82-4dfe-a08e-c0d3457cf91a") {
-            console.log('meshArr',meshArr)
-        }
         meshArr.forEach( (m:any) => {
-
           let startX = table.position.x;
           let startY = table.position.y;
           let endX  = m.position.x;
           let endY  = m.position.y;
-          // console.log('265=====> YYY',startY,endY)
-          // console.log('266=====> XXX',startX,endX)
-
-          if (startY!==endY&&startX!==endX) {
-            console.log('斜线')
-            if (startX>endX) {
-              startX = startX - table.geometry.parameters.width/2;
-              endX  = endX + table.geometry.parameters.width/2
-            }else{
-              startX = startX + table.geometry.parameters.width/2;
-              endX  = endX - table.geometry.parameters.width/2;
-            }
-          }
+          let calPosition:any = {
+            startX,
+            startY,
+            endX,
+            endY,
+          };
 
           // 水平跨单步骤依赖
           if ( startY===endY && (Math.abs(m.step - table.step) === 1)) {
             if (m.step>table.step) {
-              startX = startX + table.geometry.parameters.width/2;
-              endX  = endX - table.geometry.parameters.width/2
+              calPosition = {...calPosition,...rightCenter(startX,endX,table)}
             }else{
-              startX = startX - table.geometry.parameters.width/2;
-              endX  = endX + table.geometry.parameters.width/2
+              calPosition = {...calPosition,...leftCenter(startX,endX,table)}
             }
           }
 
           //垂直跨单表依赖关系
           if (startX===endX && (Math.abs(m.subIndex - table.subIndex) === 1)) {
-              console.log('垂直依赖关系')
-
               if (startY>endY) {
-                startY = startY - table.geometry.parameters.height/2;
-                endY  = endY + table.geometry.parameters.height/2
+                calPosition = {...calPosition,...bottomCenter(startY,endY,table)}
               }else{
-                startY = startY + table.geometry.parameters.height/2;
-                endY  = endY - table.geometry.parameters.height/2
+                calPosition = {...calPosition,...topCenter(startY,endY,table)}
               }
-
-
           }
-
+          var geometryLine = new THREE.Geometry();
+          var materialLine = new THREE.LineBasicMaterial({
+          	color: 0x666666,
+          });
           geometryLine.vertices.push(
-            new THREE.Vector3( startX, startY, 0 ), //起点
-            new THREE.Vector3( endX, endY, 0 ), //终点
+            new THREE.Vector3( calPosition.startX, calPosition.startY, 0 ), //起点
+            new THREE.Vector3( calPosition.endX, calPosition.endY, 0 ), //终点
           );
           var line:any = new THREE.Line( geometryLine, materialLine );
 
+
+          if (startY!==endY&&startX!==endX) {
+            if (startX>endX) {
+              calPosition = {...calPosition,...leftCenter(startX,endX,table)}
+            }else{
+              calPosition = {...calPosition,...rightCenter(startX,endX,table)}
+            }
+            var curve = new THREE.CubicBezierCurve(
+              new THREE.Vector2( calPosition.startX, calPosition.startY ),
+              new THREE.Vector2( (calPosition.endX-calPosition.startX)/6*5+calPosition.startX, calPosition.startY ),
+              new THREE.Vector2( (calPosition.endX-calPosition.startX)/6+calPosition.startX, calPosition.endY ),
+              new THREE.Vector2( calPosition.endX, calPosition.endY )
+            );
+            line = createBezierLine(curve)
+          }
           //垂直跨多表依赖关系
           if (startX===endX && (Math.abs(m.subIndex - table.subIndex) > 1)) {
             //多表
-            startX = startX - table.geometry.parameters.width/2;
-            endX  = endX - table.geometry.parameters.width/2;
+            calPosition = {...calPosition,...alignLeft(startX,endX,table)}
 
             var curve = new THREE.CubicBezierCurve(
-            	new THREE.Vector2( startX, startY ),
-              new THREE.Vector2( startX-0.03*(m.subIndex+1), (startY-endY)/3*2+endY ),
-            	new THREE.Vector2( startX-0.03*(m.subIndex+1), (startY-endY)/3+endY ),
-            	new THREE.Vector2( endX, endY )
+            	new THREE.Vector2( calPosition.startX, calPosition.startY ),
+              new THREE.Vector2( calPosition.startX-0.03*(m.subIndex+1), (calPosition.startY-calPosition.endY)/3*2+calPosition.endY ),
+            	new THREE.Vector2( calPosition.startX-0.03*(m.subIndex+1), (calPosition.startY-calPosition.endY)/3+calPosition.endY ),
+            	new THREE.Vector2( calPosition.endX, calPosition.endY )
             );
-            // console.log('curve',curve)
-            var points = curve.getPoints( 50 );
-            var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
-            var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
-            line = new THREE.Line( geometry_b, material_b );
+            line = createBezierLine(curve)
           }
 
-          // 水平跨步骤依赖
+          // 水平跨多步骤依赖
           if ( startY===endY && (Math.abs(m.step - table.step) > 1 )) {
 
-            startY = startY + table.geometry.parameters.height/2;
-            endY  = endY + table.geometry.parameters.height/2
+            calPosition = {...calPosition,...alignTop(startY,endY,table)}
 
             var curve = new THREE.CubicBezierCurve(
-            	new THREE.Vector2( startX, startY ),
-            	new THREE.Vector2( (startX-endX)/3*2+endX, startY+0.03*(m.step+1) ),
-            	new THREE.Vector2( (startX-endX)/3+endX, endY+0.03*(m.step+1) ),
-            	new THREE.Vector2( endX, endY )
+            	new THREE.Vector2( calPosition.startX, calPosition.startY ),
+            	new THREE.Vector2( (calPosition.startX-calPosition.endX)/3*2+calPosition.endX, calPosition.startY+0.03*(m.step+1) ),
+            	new THREE.Vector2( (calPosition.startX-calPosition.endX)/3+calPosition.endX, calPosition.endY+0.03*(m.step+1) ),
+            	new THREE.Vector2( calPosition.endX, calPosition.endY )
             );
-
-            var points = curve.getPoints( 50 );
-            var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
-            var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
-            line = new THREE.Line( geometry_b, material_b );
-
+            line = createBezierLine(curve)
           }
-
-
 
           line.position.z = 0.01;
           line.connect = [table.name,m.name];
           let torusCopy:any = torus.clone();
-          torusCopy.position.set(endX,endY,0)
+          torusCopy.position.set(calPosition.endX,calPosition.endY,0)
           line.add(torusCopy)
           lineGroup.add(line)
         })
@@ -369,14 +396,13 @@ const View = () => {
     scene.add(stepGroup)
     scene.add(lineGroup)
     scene.add(group);
-    console.log('lineGroup',lineGroup)
     let position:any, target:any, tween:any, tweenBack:any, onOff = true, lengthSlice = { l : 0 }, opacity ={ o : 0};
 
     function init(mesh:any) {
 			let position = { z: mesh.position.z };
 			// target = mesh;
 			tween = new TWEEN.Tween(position)
-				.to({z: 0.2}, 800)
+				.to({z: 0.3}, 800)
 				// .delay(1000)
 				.easing(TWEEN.Easing.Circular.InOut)
 				.onUpdate(()=>mesh.position.z = position.z);
@@ -386,7 +412,6 @@ const View = () => {
 				.onUpdate(()=>mesh.position.z = position.z);
 			// tween.chain(tweenBack);
 			// tweenBack.chain(tween);
-
 
       // let opacity = { o : mesh.material.opacity };
       let tweenOpacity = new TWEEN.Tween(opacity)
@@ -400,21 +425,21 @@ const View = () => {
 				.onUpdate(()=>mesh.material.opacity = opacity.o);
 
       // let lengthSlice = { l : 0 }
-      let tweenLine = new TWEEN.Tween(lengthSlice)
-				.to({ l: points.length }, 800)
-				.delay(100)
-				.easing(TWEEN.Easing.Cubic.InOut)
-				.onUpdate(()=>mesh.geometry.setFromPoints(points.slice(0,lengthSlice.l)));
-      let tweenLineBack = new TWEEN.Tween(lengthSlice)
-				.to({ l: 0}, 800)
-				.easing(TWEEN.Easing.Cubic.InOut)
-				.onUpdate(()=>mesh.geometry.setFromPoints(points.slice(0,lengthSlice.l)));
+      // let tweenLine = new TWEEN.Tween(lengthSlice)
+			// 	.to({ l: points.length }, 800)
+			// 	.delay(100)
+			// 	.easing(TWEEN.Easing.Cubic.InOut)
+			// 	.onUpdate(()=>mesh.geometry.setFromPoints(points.slice(0,lengthSlice.l)));
+      // let tweenLineBack = new TWEEN.Tween(lengthSlice)
+			// 	.to({ l: 0}, 800)
+			// 	.easing(TWEEN.Easing.Cubic.InOut)
+			// 	.onUpdate(()=>mesh.geometry.setFromPoints(points.slice(0,lengthSlice.l)));
 
       return{
         tweenOpacity,
         tweenOpacityBack,
-        tweenLine,
-        tweenLineBack
+        // tweenLine,
+        // tweenLineBack
       }
 		}
 
@@ -443,9 +468,10 @@ const View = () => {
         if (intersects.length>0) {
             // init(intersects[0]);
             // intersects[0].object.position.z += 0.1;
-            currentItem = intersects[0].object;
+            let clickItem:any = intersects[0].object;
             console.log('currentItem',currentItem)
-            if (onOff&&(currentItem.dependedOnBy.length>0||currentItem.depends.length>0)) {
+            if (onOff&&(clickItem.dependedOnBy.length>0||clickItem.depends.length>0)) {
+              currentItem = clickItem;
                 onOff=false
                 // 被依赖项目
                 let dependedOnByItem = currentItem.dependedOnBy.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
