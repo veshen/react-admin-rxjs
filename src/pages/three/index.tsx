@@ -5,7 +5,7 @@ const TWEEN = require('@tweenjs/tween.js')
 
 const steps = [
   {
-    name : 'step-A',
+    name : '基础数据',
     tables : [
       {
         name : '佣金基础数据',
@@ -59,13 +59,25 @@ const steps = [
     ]
   },
   {
-    name : 'step-B',
+    name : 'step-B1',
     tables : [
       {
         name: "2018Q1",
         type: "data",
         id: "98599b77-2b85-4145-837e-3c6ec1f437c1",
         dependedOnBy: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"],
+        depends: []
+      }
+    ]
+  },
+  {
+    name : 'step-B2',
+    tables : [
+      {
+        name: "2018Q1231231",
+        type: "data",
+        id: "589537da6248123123123128599b77-2b85-4145-837e-3c6ec1f437c1",
+        dependedOnBy: [],
         depends: []
       }
     ]
@@ -189,7 +201,8 @@ const View = () => {
 **/
     /*字体*/
     var loader = new THREE.FontLoader();
-    var font = loader.parse(require('./fonts1/optimer_bold.typeface.json'));
+    // var font = loader.parse(require('./fonts1/optimer_bold.typeface.json'));
+    var font = loader.parse(require('./fonts1/FZLanTingHeiSULGB_Regular.json'));
     var stepGroup:any = new THREE.Group();
     var group:any = new THREE.Group();
 
@@ -235,13 +248,13 @@ const View = () => {
         tableCardMesh.depends = JSON.parse(JSON.stringify(table.depends));
         tableCardMesh.step = i;
         tableCardMesh.subIndex = index;
-        let geometryFontB:any = new THREE.TextGeometry( 'aaabbb', {
+        let geometryFontB:any = new THREE.TextGeometry( table.name, {
           font: font,
           size: 0.04,
-          height: 0.0001,
+          height: 0.001,
         } );
         let textMaterialB = new THREE.MeshBasicMaterial({
-          color: 0xffffff
+          color: 0x000000
         })
         let textMeshB = new THREE.Mesh(geometryFontB,textMaterialB);
         textMeshB.position.set(-0.12,-0.02,0.01)
