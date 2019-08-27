@@ -12,7 +12,25 @@ const steps = [
         type: "snapshot",
         id: "d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17",
         dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248","98599b77-2b85-4145-837e-3c6ec1f437c2","3a68a786-8120-46f9-873c-441d6dfc49fd"],//被依赖项
-        depends: ["98599b77-2b85-4145-837e-3c6ec1f437c1"] // 依赖项目
+        depends: ["98599b77-2b85-4145-837e-3c6ec1f437c1"], // 依赖项目
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "1-1",
+            name: "达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "1-2",
+            name: "指标达成限",
+            reachable: false,
+            type: "input",
+          }
+        ]
       },
       {
         name : 'CA',
@@ -107,11 +125,29 @@ const steps = [
         depends: []
       },
       {
-        name: "CA02",
+        name: "CA02-item",
         type: "data",
         id: "880369e2-f0b2-4854-bd39-589537da6248",
         dependedOnBy: [],
-        depends: ["6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a","d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
+        depends: ["6d4d2f9f-5f68-40cf-98c8-bb9ba5504412", "b6f20cbc-f67e-485f-a741-99fa50577e0a","d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"],
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-b3e4-810369183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-b3e4-810369183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "input",
+          }
+        ]
       }
     ]
   },
@@ -171,10 +207,31 @@ const View = () => {
     let markMaterial = new THREE.MeshBasicMaterial({
       color : 0xffffff,
       transparent : true,
-      opacity : 0
+      opacity : 0.8
     })
     let mark:any = new THREE.Mesh( markFeometry, markMaterial );
     mark.position.z = 0.02
+
+
+    var geometry2 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .2 );
+    var material2 = new THREE.MeshBasicMaterial( { color: 0xFFB02E } );
+    var torus2 = new THREE.Mesh( geometry2, material2 );
+    torus2.position.z = 0.06
+    scene.add( torus2 );
+
+    var geometry3 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .6 );
+    var material3 = new THREE.MeshBasicMaterial( { color: 0x7ce6e0 } );
+    var torus3 = new THREE.Mesh( geometry3, material3 );
+    torus3.position.z = 0.06
+    torus3.rotateZ(Math.PI * .21)
+    scene.add( torus3 );
+
+    var geometry4 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .4 );
+    var material4 = new THREE.MeshBasicMaterial( { color: 0x1D84FF } );
+    var torus4 = new THREE.Mesh( geometry4, material4 );
+    torus4.position.z = 0.06
+    torus4.rotateZ(Math.PI * .82)
+    scene.add( torus4 );
 
     scene.add( mark );
 /**
@@ -202,10 +259,10 @@ const View = () => {
     /*字体*/
     var loader = new THREE.FontLoader();
     // var font = loader.parse(require('./fonts1/optimer_bold.typeface.json'));
-    var font = loader.parse(require('./fonts1/FZLanTingHeiSULGB_Regular.json'));
+    // var font = loader.parse(require('./fonts1/FZLanTingHei-L-GBK_Regular.json'));
+    var font = loader.parse(require('./fonts1/Microsoft_YaHei_UI_Light_Regular.json'));
     var stepGroup:any = new THREE.Group();
     var group:any = new THREE.Group();
-
     steps.forEach( ( item, i ) => {
       //创建step
       let geometryFont:any = new THREE.TextGeometry( item.name, {
@@ -248,9 +305,10 @@ const View = () => {
         tableCardMesh.depends = JSON.parse(JSON.stringify(table.depends));
         tableCardMesh.step = i;
         tableCardMesh.subIndex = index;
+        tableCardMesh.itemDependedOnByList = table.itemDependedOnByList||[];
         let geometryFontB:any = new THREE.TextGeometry( table.name, {
           font: font,
-          size: 0.04,
+          size: 0.03,
           height: 0.001,
         } );
         let textMaterialB = new THREE.MeshBasicMaterial({
@@ -260,6 +318,31 @@ const View = () => {
         textMeshB.position.set(-0.12,-0.02,0.01)
         // textMeshB.translateY(-.1);
         tableCardMesh.add(textMeshB)
+        let itemGrop:any = new THREE.Group();
+        if (Array.isArray(table.itemDependedOnByList)&&table.itemDependedOnByList.length>0) {
+          table.itemDependedOnByList.forEach((tableItem:any,tableItemIndex:any)=>{
+            let tableItemFont:any = new THREE.TextGeometry( tableItem.name, {
+              font: font,
+              size: 0.03,
+              height: 0.001,
+            } );
+            let textMaterial = new THREE.MeshBasicMaterial({
+              color: 0x000000
+            })
+            let tableItemTextMesh = new THREE.Mesh(tableItemFont,textMaterial);
+            tableItemTextMesh.position.set(-0.14,-0.02,0.01)
+            let materialTableItem = new THREE.MeshBasicMaterial({color: new THREE.Color(0xE8ECF2)})
+            let tableItemMesh:any = new THREE.Mesh( geometry, materialTableItem );
+            tableItemMesh.translateX(0.10)
+            tableItemMesh.translateY(-0.17*(tableItemIndex+1))
+            tableItemMesh.add(tableItemTextMesh)
+            itemGrop.add(tableItemMesh)
+          })
+          itemGrop.name = "table-item-group";
+          // itemGrop.visible = false;
+          tableCardMesh.add(itemGrop)
+        }
+
         group.add(tableCardMesh)
       })
 
@@ -413,6 +496,7 @@ const View = () => {
 
     function init(mesh:any) {
 			let position = { z: mesh.position.z };
+      let positionZ = { y: mesh.rotation.y };
 			// target = mesh;
 			tween = new TWEEN.Tween(position)
 				.to({z: 0.3}, 800)
@@ -447,10 +531,15 @@ const View = () => {
 			// 	.to({ l: 0}, 800)
 			// 	.easing(TWEEN.Easing.Cubic.InOut)
 			// 	.onUpdate(()=>mesh.geometry.setFromPoints(points.slice(0,lengthSlice.l)));
-
+      let tweenScreen = new TWEEN.Tween(positionZ)
+				.to({y: -1}, 800)
+				.delay(100)
+				.easing(TWEEN.Easing.Cubic.InOut)
+				.onUpdate(()=>mesh.rotation.y = positionZ.y);
       return{
         tweenOpacity,
         tweenOpacityBack,
+        tweenScreen
         // tweenLine,
         // tweenLineBack
       }
@@ -466,6 +555,8 @@ const View = () => {
     var mouse = new THREE.Vector2();
     let allItem:any = [];
     let currentItem:any = { position:{} };
+    let currentStatus:string = 'init'; // init : 初始化 ， table : 步骤表, tableItem : 步骤表依赖项目
+    let allTableChildrenItemList:any[] = [];
     function onMouseClick( event:any ) {
 
         //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
@@ -475,55 +566,64 @@ const View = () => {
 
         // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
         raycaster.setFromCamera( mouse, camera );
-        // console.log(scene,group.children )
+
         // 获取raycaster直线和所有模型相交的数组集合
         var intersects = raycaster.intersectObjects( group.children );
-        if (intersects.length>0) {
+        if (intersects.length>0&&currentStatus!=='tableItem') {
             // init(intersects[0]);
-            // intersects[0].object.position.z += 0.1;
+            // intersects[0].object.position.z += d0.1;
             let clickItem:any = intersects[0].object;
-            console.log('currentItem',currentItem)
-            if (onOff&&(clickItem.dependedOnBy.length>0||clickItem.depends.length>0)) {
+            console.log('clickItem',clickItem)
+            if (currentStatus === 'table'&&allItem.some( (m:any) => m.id ===  intersects[0].object.id)) {
+
+              currentStatus = 'tableItem';
+              allTableChildrenItemList = Array.prototype.concat.apply([],allItem.map( (mesh:any) => mesh.children.filter((m:any) => m.name === "table-item-group")));
+              allTableChildrenItemList.forEach( (group:any)=> group.visible = true )
+              // allTableChildrenItemList = Array.prototype.concat.apply([],allItem.map( (mesh:any) => mesh.children.filter((m:any) => m.name === "table-item-group")));
+              // allTableChildrenItemList.forEach( (group:any)=> group.visible = true )
+
+            }
+            if (currentStatus==='init'&&(clickItem.dependedOnBy.length>0||clickItem.depends.length>0)) {
               currentItem = clickItem;
-                onOff=false
-                // 被依赖项目
-                let dependedOnByItem = currentItem.dependedOnBy.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
-                // 依赖项
-                let dependsItem = currentItem.depends.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
-                // 线
-                let lineArray = lineGroup.children.filter( (line:any) => line.connect.includes(currentItem.name) )
-                console.log('lineArray',lineArray,dependedOnByItem,dependsItem)
-                let stepTitleIndex:any = Array.from(new Set([currentItem].concat(dependedOnByItem,dependsItem).map( (item:any) => item.step )))
-                console.log('stepTitleIndex',stepTitleIndex)
-                allItem = Array.prototype.concat([],dependedOnByItem,dependsItem,lineArray,stepTitleIndex.map( (i:number) => stepGroup.children[i] ))
-                console.log('allItem',allItem)
+              currentStatus = 'table';
+              // onOff=false
+              // 被依赖项目
+              let dependedOnByItem = currentItem.dependedOnBy.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
+              // 依赖项
+              let dependsItem = currentItem.depends.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
+              // 线
+              let lineArray = lineGroup.children.filter( (line:any) => line.connect.includes(currentItem.name) )
+              console.log('lineArray',lineArray,dependedOnByItem,dependsItem)
+              let stepTitleIndex:any = Array.from(new Set([currentItem].concat(dependedOnByItem,dependsItem).map( (item:any) => item.step )))
+              console.log('stepTitleIndex',stepTitleIndex)
+              allItem = Array.prototype.concat([currentItem],dependedOnByItem,dependsItem,lineArray,stepTitleIndex.map( (i:number) => stepGroup.children[i] ))
+              console.log('allItem',allItem)
 
-
-                init(currentItem);
+              allItem.forEach( (mesh:any) => {
+                init(mesh);
                 tween.start()
-                allItem.forEach( (mesh:any) => {
-                  init(mesh);
-                  tween.start()
-                })
+              })
 
-                // init(stepGroup);
-                // tween.start()
-
-                const { tweenOpacity } = init(mark);
-                tweenOpacity.start()
-
+              const { tweenOpacity } = init(mark);
+              tweenOpacity.start()
             }
 
         }else{
-          onOff = true
-          const { tweenOpacityBack } = init(mark);
-          tweenOpacityBack.start()
-          init(currentItem);
-          tweenBack.start()
-          allItem.forEach( (mesh:any) => {
-            init(mesh);
-            tweenBack.start()
-          })
+
+          if (currentStatus==="table") {
+            currentStatus="init"
+            const { tweenOpacityBack } = init(mark);
+            tweenOpacityBack.start()
+
+            allItem.forEach( (mesh:any) => {
+              init(mesh);
+              tweenBack.start()
+            })
+          }
+          if (currentStatus==="tableItem") {
+            currentStatus="table"
+            allTableChildrenItemList.forEach( (group:any)=> group.visible = false )
+          }
 
 
           // init(stepGroup);

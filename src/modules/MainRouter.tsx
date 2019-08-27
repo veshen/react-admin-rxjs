@@ -2,10 +2,10 @@ import React from 'react';
 
 import { BrowserRouter} from "react-router-dom";
 import { Provider } from 'react-redux'
-import { renderRoutes } from 'react-router-config'
+// import { renderRoutes } from 'react-router-config'
 import { Route } from "react-router-dom";
 
-import BasicLayout from "./../layouts/BasicLayout.connect";
+// import BasicLayout from "./../layouts/BasicLayout.connect";
 
 import ThreePage from './../pages/three/index'
 import Home from './../pages/home/index.connect';
@@ -33,17 +33,26 @@ interface TypeOfMainRouter{
 
 }
 
+// const MainRouter:React.SFC<TypeOfMainRouter> = () => {
+//   return(
+//     <Provider store={store}>
+//       <BrowserRouter>
+//         {
+//           true?
+//           <Route exact path="/" component={ThreePage} />
+//           :<BasicLayout>
+//             {renderRoutes(routes)}
+//           </BasicLayout>
+//         }
+//       </BrowserRouter>
+//     </Provider>
+//   )
+// }
 const MainRouter:React.SFC<TypeOfMainRouter> = () => {
   return(
     <Provider store={store}>
       <BrowserRouter>
-        {
-          true?
-          <Route exact path="/" component={ThreePage} />
-          :<BasicLayout>
-            {renderRoutes(routes)}
-          </BasicLayout>
-        }
+        <Route exact path="/" component={ThreePage} />
       </BrowserRouter>
     </Provider>
   )
