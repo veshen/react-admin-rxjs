@@ -17,18 +17,50 @@ const steps = [
           {
             dependedOnBy: [],
             depends: [],
-            id: "1-1",
-            name: "达成率上限",
+            id: "c2fe7220-6a48-438b-b3e12312asdf4-810369183fc3",
+            name: "指标达成率上限",
             reachable: false,
             type: "input",
           },
           {
             dependedOnBy: [],
             depends: [],
-            id: "1-2",
+            id: "c2fe7220-6a48-4asdf138b-b3e4-810369183123123fc3",
             name: "指标达成限",
             reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-b3e4-8103611asdgdasg2312311119183fc3",
+            name: "指标达成率上限",
+            reachable: false,
             type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-asdfads123438b-b3e4-8103692222222183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-1asdfasdgdf3423123123438b-b3e4-810369183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6asdfadsf2234a44356346348-438b-b3e4-810369183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "formula",
           }
         ]
       },
@@ -37,7 +69,33 @@ const steps = [
         type: "snapshot",
         id: "6d4d2f9f-5f68-40cf-98c8-bb9ba5504412",
         dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248"],//被依赖项
-        depends: [] // 依赖项目
+        depends: [], // 依赖项目
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-as3123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "formula",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7c3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2f83123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "input",
+          }
+        ]
       },
       {
         name: "商务销售毛利率区间",
@@ -65,14 +123,74 @@ const steps = [
         type: "snapshot",
         id: "b6f20cbc-f67e-485f-a741-99fa50577e0a",
         dependedOnBy: ["880369e2-f0b2-4854-bd39-589537da6248"],
-        depends: []
+        depends: [],
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-123fadsf6a48-as3123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7casdfasdg-dasfadsf-3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2f8-sadf-asdf-sad-f-3123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "input",
+          }
+        ]
       },
       {
         name: "员工方案关系表",
         type: "snapshot",
         id: "3a68a786-8120-46f9-873c-441d6dfc49fd",
         dependedOnBy: [],
-        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
+        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"],
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe72asfasfasddd20-6a48-438b-b3e12312asdf4-810369183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe72asdasdss20-6a48-4asdf138b-b3e4-810369183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220aaaaa-6a48-438b-b3e4-8103611asdgdasg2312311119183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-asdffsdfsdfads123438b-b3e4-8103692222222183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          }
+        ]
       }
     ]
   },
@@ -84,7 +202,33 @@ const steps = [
         type: "data",
         id: "98599b77-2b85-4145-837e-3c6ec1f437c1",
         dependedOnBy: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"],
-        depends: []
+        depends: [],
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe72asfasfasdddsdf23423420-6a48-438b-b3e12312asdf4-810369183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe72asdasdss20-6a48-4rwerew--asdf138b-b3e4-810369183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-asdffsdfsdfads---123438b-b3e4-8103692222222183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          }
+        ]
       }
     ]
   },
@@ -96,7 +240,41 @@ const steps = [
         type: "data",
         id: "589537da6248123123123128599b77-2b85-4145-837e-3c6ec1f437c1",
         dependedOnBy: [],
-        depends: []
+        depends: [],
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-b3e12312asdf4-81036918",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2f1119183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-asd2222183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          },
+        ]
       }
     ]
   },
@@ -108,7 +286,33 @@ const steps = [
         type : "param",
         id: "98599b77-2b85-4145-837e-3c6ec1f437c2",
         dependedOnBy: ["7a9f1a84-dda9-47d3-83d0-60cf1cd4d0c2"],
-        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"]
+        depends: ["d7fa71c0-cb41-4a06-bba5-cccf5fe0cd17"],
+        itemDependedOnByList : [
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-asdffffb3e12312asdf4-810369183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-4asadgasdgasddsasdf138b-b3e4-810369183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-b3sadfasdfasdfasdfe4-8103611asdgdasg2312311119183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "input",
+          },
+        ]
       },
       {
         name : 'CA',
@@ -137,7 +341,7 @@ const steps = [
             id: "c2fe7220-6a48-438b-b3e4-810369183fc3",
             name: "指标达成率上限",
             reachable: false,
-            type: "input",
+            type: "reference",
           },
           {
             dependedOnBy: [],
@@ -146,6 +350,54 @@ const steps = [
             name: "指标达成限",
             reachable: false,
             type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-b3e4-810361111119183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "reference",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-438b-b3e4-8103692222222183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-123123123438b-b3e4-810369183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "formula",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a44356346348-438b-b3e4-810369183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "input",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6asdafdf48-438b-b3e4-810369183fc3",
+            name: "指标达成率上限",
+            reachable: false,
+            type: "formula",
+          },
+          {
+            dependedOnBy: [],
+            depends: [],
+            id: "c2fe7220-6a48-4gfsdgfg38b-b3e4-810369183123123fc3",
+            name: "指标达成限",
+            reachable: false,
+            type: "formula",
           }
         ]
       }
@@ -188,6 +440,16 @@ const View = () => {
   }
   useEffect(()=>{
 
+    const COLOR_DATA:any = {
+      snapshot : new THREE.Color(0xFFB02E),
+      param : new THREE.Color(0x7ce6e0),
+      data : new THREE.Color(0x1D84FF),
+      input : new THREE.Color('rgb(118, 217, 166)'),
+      formula : new THREE.Color('rgb(254, 183, 83)'),
+      reference : new THREE.Color('rgb(51, 122, 183)'),
+
+    }
+
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 1, 10000 );
     camera.position.set(0,0,3)
@@ -199,39 +461,40 @@ const View = () => {
     var torus = new THREE.Mesh( geometryTorus, materialTorus );
 
     // 坐标轴
-    // var axes = new THREE.AxesHelper(1.6);
-    // scene.add(axes);
+    var axes = new THREE.AxesHelper(1.6);
+    axes.position.z = 0.4
+    scene.add(axes);
 
     //创建半透明mark
     let markFeometry = new THREE.PlaneGeometry(6,4);
     let markMaterial = new THREE.MeshBasicMaterial({
       color : 0xffffff,
       transparent : true,
-      opacity : 0.8
+      opacity : 0
     })
     let mark:any = new THREE.Mesh( markFeometry, markMaterial );
     mark.position.z = 0.02
 
 
-    var geometry2 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .2 );
-    var material2 = new THREE.MeshBasicMaterial( { color: 0xFFB02E } );
-    var torus2 = new THREE.Mesh( geometry2, material2 );
-    torus2.position.z = 0.06
-    scene.add( torus2 );
-
-    var geometry3 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .6 );
-    var material3 = new THREE.MeshBasicMaterial( { color: 0x7ce6e0 } );
-    var torus3 = new THREE.Mesh( geometry3, material3 );
-    torus3.position.z = 0.06
-    torus3.rotateZ(Math.PI * .21)
-    scene.add( torus3 );
-
-    var geometry4 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .4 );
-    var material4 = new THREE.MeshBasicMaterial( { color: 0x1D84FF } );
-    var torus4 = new THREE.Mesh( geometry4, material4 );
-    torus4.position.z = 0.06
-    torus4.rotateZ(Math.PI * .82)
-    scene.add( torus4 );
+    // var geometry2 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .2 );
+    // var material2 = new THREE.MeshBasicMaterial( { color: 0xFFB02E, transparent : true, opacity : 0.4 } );
+    // var torus2 = new THREE.Mesh( geometry2, material2 );
+    // torus2.position.z = 0.4
+    // scene.add( torus2 );
+    //
+    // var geometry3 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .6 );
+    // var material3 = new THREE.MeshBasicMaterial( { color: 0x7ce6e0, transparent : true, opacity : 0.4 } );
+    // var torus3 = new THREE.Mesh( geometry3, material3 );
+    // torus3.position.z = 0.4
+    // torus3.rotateZ(Math.PI * .21)
+    // scene.add( torus3 );
+    //
+    // var geometry4 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .4 );
+    // var material4 = new THREE.MeshBasicMaterial( { color: 0x1D84FF, transparent : true, opacity : 0.4 } );
+    // var torus4 = new THREE.Mesh( geometry4, material4 );
+    // torus4.position.z = 0.4
+    // torus4.rotateZ(Math.PI * .82)
+    // scene.add( torus4 );
 
     scene.add( mark );
 /**
@@ -284,19 +547,10 @@ const View = () => {
 
 
       item.tables.forEach( (table:any,index:number) => {
-        let material = new THREE.MeshBasicMaterial()
-        //使用材质颜色区分不同的表
-        if (table.type==='snapshot') {
-          material.color = new THREE.Color(0xFFB02E);
-        }
-        if (table.type==='param') {
-          material.color = new THREE.Color(0x7ce6e0);
-        }
-        if (table.type==='data') {
-          material.color = new THREE.Color(0x1D84FF);
-        }
+        let material = new THREE.MeshBasicMaterial({color:COLOR_DATA[table.type]})
         let tableCardMesh:any = new THREE.Mesh( geometry, material );
         tableCardMesh.name = table.id;
+        tableCardMesh.cardType = table.type;
         tableCardMesh.position.x = i * 0.6;
         tableCardMesh.position.y = index * - 0.26;
         tableCardMesh.translateX(-steps.length*0.22)
@@ -318,30 +572,30 @@ const View = () => {
         textMeshB.position.set(-0.12,-0.02,0.01)
         // textMeshB.translateY(-.1);
         tableCardMesh.add(textMeshB)
-        let itemGrop:any = new THREE.Group();
-        if (Array.isArray(table.itemDependedOnByList)&&table.itemDependedOnByList.length>0) {
-          table.itemDependedOnByList.forEach((tableItem:any,tableItemIndex:any)=>{
-            let tableItemFont:any = new THREE.TextGeometry( tableItem.name, {
-              font: font,
-              size: 0.03,
-              height: 0.001,
-            } );
-            let textMaterial = new THREE.MeshBasicMaterial({
-              color: 0x000000
-            })
-            let tableItemTextMesh = new THREE.Mesh(tableItemFont,textMaterial);
-            tableItemTextMesh.position.set(-0.14,-0.02,0.01)
-            let materialTableItem = new THREE.MeshBasicMaterial({color: new THREE.Color(0xE8ECF2)})
-            let tableItemMesh:any = new THREE.Mesh( geometry, materialTableItem );
-            tableItemMesh.translateX(0.10)
-            tableItemMesh.translateY(-0.17*(tableItemIndex+1))
-            tableItemMesh.add(tableItemTextMesh)
-            itemGrop.add(tableItemMesh)
-          })
-          itemGrop.name = "table-item-group";
-          // itemGrop.visible = false;
-          tableCardMesh.add(itemGrop)
-        }
+        // let itemGrop:any = new THREE.Group();
+        // if (Array.isArray(table.itemDependedOnByList)&&table.itemDependedOnByList.length>0) {
+        //   table.itemDependedOnByList.forEach((tableItem:any,tableItemIndex:any)=>{
+        //     let tableItemFont:any = new THREE.TextGeometry( tableItem.name, {
+        //       font: font,
+        //       size: 0.03,
+        //       height: 0.001,
+        //     } );
+        //     let textMaterial = new THREE.MeshBasicMaterial({
+        //       color: 0x000000
+        //     })
+        //     let tableItemTextMesh = new THREE.Mesh(tableItemFont,textMaterial);
+        //     tableItemTextMesh.position.set(-0.14,-0.02,0.01)
+        //     let materialTableItem = new THREE.MeshBasicMaterial({color: new THREE.Color(0xE8ECF2)})
+        //     let tableItemMesh:any = new THREE.Mesh( geometry, materialTableItem );
+        //     tableItemMesh.translateX(0.10)
+        //     tableItemMesh.translateY(-0.17*(tableItemIndex+1))
+        //     tableItemMesh.add(tableItemTextMesh)
+        //     itemGrop.add(tableItemMesh)
+        //   })
+        //   itemGrop.name = "table-item-group";
+        //   // itemGrop.visible = false;
+        //   tableCardMesh.add(itemGrop)
+        // }
 
         group.add(tableCardMesh)
       })
@@ -494,17 +748,17 @@ const View = () => {
     scene.add(group);
     let position:any, target:any, tween:any, tweenBack:any, onOff = true, lengthSlice = { l : 0 }, opacity ={ o : 0};
 
-    function init(mesh:any) {
+    function init(mesh:any,tweenEnd:any) {
 			let position = { z: mesh.position.z };
       let positionZ = { y: mesh.rotation.y };
 			// target = mesh;
 			tween = new TWEEN.Tween(position)
-				.to({z: 0.3}, 800)
+				.to(tweenEnd, 800)
 				// .delay(1000)
 				.easing(TWEEN.Easing.Circular.InOut)
 				.onUpdate(()=>mesh.position.z = position.z);
 			tweenBack = new TWEEN.Tween(position)
-				.to({z: 0}, 800)
+				.to(tweenEnd, 800)
 				.easing(TWEEN.Easing.Circular.InOut)
 				.onUpdate(()=>mesh.position.z = position.z);
 			// tween.chain(tweenBack);
@@ -556,6 +810,7 @@ const View = () => {
     let allItem:any = [];
     let currentItem:any = { position:{} };
     let currentStatus:string = 'init'; // init : 初始化 ， table : 步骤表, tableItem : 步骤表依赖项目
+    let allTableCard:any[] = [];
     let allTableChildrenItemList:any[] = [];
     function onMouseClick( event:any ) {
 
@@ -575,22 +830,56 @@ const View = () => {
             let clickItem:any = intersects[0].object;
             console.log('clickItem',clickItem)
             if (currentStatus === 'table'&&allItem.some( (m:any) => m.id ===  intersects[0].object.id)) {
-
+              init(mark,{z:0.35});
+              tween.start()
               currentStatus = 'tableItem';
-              allTableChildrenItemList = Array.prototype.concat.apply([],allItem.map( (mesh:any) => mesh.children.filter((m:any) => m.name === "table-item-group")));
-              allTableChildrenItemList.forEach( (group:any)=> group.visible = true )
-              // allTableChildrenItemList = Array.prototype.concat.apply([],allItem.map( (mesh:any) => mesh.children.filter((m:any) => m.name === "table-item-group")));
-              // allTableChildrenItemList.forEach( (group:any)=> group.visible = true )
 
+              let torusGroup:any = new THREE.Group();
+              let sphereGroup:any = new THREE.Group();
+              let arrTableItem:any[] = allTableCard.reduce( (accumulator,currentValue) => accumulator.concat(currentValue.itemDependedOnByList),[])
+              let arrTableItemLength:number = arrTableItem.length;
+
+              let createSphere = ( accSphere:any, cardSphere:any, idxSphere:number, sourceSphere:any ) => {
+                var geometry2 = new THREE.SphereGeometry( 0.02, 32, 32 );
+                var material2 = new THREE.MeshBasicMaterial( {color: COLOR_DATA[cardSphere.type]} );
+                var sphere2 = new THREE.Mesh( geometry2, material2 );
+                sphere2.position.z = 0.46
+                sphere2.position.x = accSphere.cos
+                sphere2.position.y = accSphere.sin
+                sphereGroup.add( sphere2 );
+                return {
+                  cos : Math.cos(( 360/ arrTableItemLength*(idxSphere+1) / 180)  * Math.PI+0.01),
+                  sin : Math.sin(( 360/ arrTableItemLength*(idxSphere+1) / 180)  * Math.PI+0.01),
+                }
+              }
+
+              let createTorusView = ( acc:any, card:any, idx:number, source:any ) => {
+
+                var geometry = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2) -0.01 );
+                var material = new THREE.MeshBasicMaterial( { color: COLOR_DATA[card.cardType], transparent : true, opacity : 0.3 } );
+                var torus = new THREE.Mesh( geometry, material );
+                torus.rotateZ(acc)
+                torus.position.z = 0.4
+
+                torusGroup.add(torus)
+                return acc+Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2)
+              }
+              allTableCard.reduce( createTorusView, 0 )
+              arrTableItem.reduce( createSphere, {cos:Math.cos(( 0 / 180)  * Math.PI+0.01),sin:Math.sin(( 0 / 180)  * Math.PI+0.01)} )
+
+              torusGroup.name = 'torusGroup';
+              sphereGroup.name = 'sphereGroup';
+              setTimeout(()=>scene.add( torusGroup ),1000)
+              setTimeout(()=>scene.add( sphereGroup ),1000)
             }
             if (currentStatus==='init'&&(clickItem.dependedOnBy.length>0||clickItem.depends.length>0)) {
               currentItem = clickItem;
               currentStatus = 'table';
-              // onOff=false
               // 被依赖项目
               let dependedOnByItem = currentItem.dependedOnBy.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
               // 依赖项
               let dependsItem = currentItem.depends.map( (id:string) => group.children.filter( (card:any) => card.name === id )[0] )
+              allTableCard = [currentItem].concat(dependedOnByItem,dependsItem);
               // 线
               let lineArray = lineGroup.children.filter( (line:any) => line.connect.includes(currentItem.name) )
               console.log('lineArray',lineArray,dependedOnByItem,dependsItem)
@@ -600,11 +889,11 @@ const View = () => {
               console.log('allItem',allItem)
 
               allItem.forEach( (mesh:any) => {
-                init(mesh);
+                init(mesh,{z:0.3});
                 tween.start()
               })
 
-              const { tweenOpacity } = init(mark);
+              const { tweenOpacity } = init(mark,{});
               tweenOpacity.start()
             }
 
@@ -612,17 +901,31 @@ const View = () => {
 
           if (currentStatus==="table") {
             currentStatus="init"
-            const { tweenOpacityBack } = init(mark);
+            const { tweenOpacityBack } = init(mark,{});
             tweenOpacityBack.start()
 
             allItem.forEach( (mesh:any) => {
-              init(mesh);
+              init(mesh,{z:0});
               tweenBack.start()
             })
           }
           if (currentStatus==="tableItem") {
             currentStatus="table"
-            allTableChildrenItemList.forEach( (group:any)=> group.visible = false )
+            init(mark,{z:0.02});
+            tween.start()
+            console.log(scene)
+
+            scene.children.forEach( (item:any) => {
+              if (item.name === 'torusGroup') {
+                scene.remove(item)
+              }
+            })
+            scene.children.forEach( (item:any) => {
+              if (item.name === 'sphereGroup') {
+                scene.remove(item)
+              }
+            })
+            // allTableChildrenItemList.forEach( (group:any)=> group.visible = false )
           }
 
 
