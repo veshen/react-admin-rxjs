@@ -450,9 +450,9 @@ const View = () => {
       reference : new THREE.Color('rgb(51, 122, 183)'),
 
     }
-
+    let container:any = document.querySelector('#container');
     let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 1, 10000 );
+    let camera = new THREE.PerspectiveCamera( 50, container.clientWidth/(container.clientHeight), 1, 10000 );
     camera.position.set(0,0,3)
     camera.lookAt(scene.position);
 
@@ -763,8 +763,8 @@ const View = () => {
     function onMouseClick( event:any ) {
 
         //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        mouse.x = ( event.clientX / container.clientWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
 
         // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
         raycaster.setFromCamera( mouse, camera );
@@ -948,7 +948,7 @@ const View = () => {
 
     let renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setClearColor(new THREE.Color(0xf6f6f6))
-  	renderer.setSize( window.innerWidth, window.innerHeight );
+  	renderer.setSize( container.clientWidth, container.clientHeight );
   	const CanvasWarp:any = document.querySelector('#container');
     CanvasWarp.appendChild( renderer.domElement )
     // attach them here, since appendChild needs to be called first
@@ -969,11 +969,13 @@ const View = () => {
   return(
     <div>
       <Spin tip="Loading..." spinning={spinning}>
-        <div id="container">
+        <div id="container"  style={{"height":'800px',"width":"800px"}}>
 
         </div>
       </Spin>
+
     </div>
+
   )
 }
 
