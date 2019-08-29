@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as THREE from 'three'
 import TrackballControls from 'three-trackballcontrols';
+import { Spin, Alert } from 'antd';
 const TWEEN = require('@tweenjs/tween.js')
 
 const steps = [
@@ -126,7 +127,7 @@ const steps = [
         depends: [],
         itemDependedOnByList : [
           {
-            dependedOnBy: [],
+            dependedOnBy: ["c2fe7220-6a48-438b-b3e4-810369183fc3"],
             depends: [],
             id: "c2fe7220-123fadsf6a48-as3123fc3",
             name: "指标达成限",
@@ -134,7 +135,7 @@ const steps = [
             type: "input",
           },
           {
-            dependedOnBy: [],
+            dependedOnBy: ["c2fe7220-6a48-438b-b3e4-810361111119183fc3"],
             depends: [],
             id: "c2fe7casdfasdg-dasfadsf-3",
             name: "指标达成率上限",
@@ -142,7 +143,7 @@ const steps = [
             type: "reference",
           },
           {
-            dependedOnBy: [],
+            dependedOnBy: ["c2fe7220-6a48-4gfsdgfg38b-b3e4-810369183123123fc3"],
             depends: [],
             id: "c2f8-sadf-asdf-sad-f-3123123fc3",
             name: "指标达成限",
@@ -418,7 +419,7 @@ const steps = [
 ]
 
 const View = () => {
-
+  const [ spinning, setSpinning ] = useState(false)
 /**
  * Initialize trackball controls to control the scene
  *
@@ -459,11 +460,19 @@ const View = () => {
     var geometryTorus = new THREE.TorusGeometry( 0.01, 0.004 , 8, 100 );
     var materialTorus = new THREE.MeshBasicMaterial( { color: 0x666666 } );
     var torus = new THREE.Mesh( geometryTorus, materialTorus );
+    // 表的子项
+    var sphereGroupeometry = new THREE.SphereGeometry( 0.02, 32, 32 );
+    const TABLE_CHILDREN_SPHERE_MESH:any = {
+      input : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:new THREE.Color('rgb(118, 217, 166)')}) ),
+      formula : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:new THREE.Color('rgb(254, 183, 83)')}) ),
+      reference : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:new THREE.Color('rgb(51, 122, 183)')}) ),
+    }
+
 
     // 坐标轴
     var axes = new THREE.AxesHelper(1.6);
-    axes.position.z = 0.4
-    scene.add(axes);
+    // axes.position.z = 0.4
+    // scene.add(axes);
 
     //创建半透明mark
     let markFeometry = new THREE.PlaneGeometry(6,4);
@@ -476,49 +485,10 @@ const View = () => {
     mark.position.z = 0.02
 
 
-    // var geometry2 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .2 );
-    // var material2 = new THREE.MeshBasicMaterial( { color: 0xFFB02E, transparent : true, opacity : 0.4 } );
-    // var torus2 = new THREE.Mesh( geometry2, material2 );
-    // torus2.position.z = 0.4
-    // scene.add( torus2 );
-    //
-    // var geometry3 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .6 );
-    // var material3 = new THREE.MeshBasicMaterial( { color: 0x7ce6e0, transparent : true, opacity : 0.4 } );
-    // var torus3 = new THREE.Mesh( geometry3, material3 );
-    // torus3.position.z = 0.4
-    // torus3.rotateZ(Math.PI * .21)
-    // scene.add( torus3 );
-    //
-    // var geometry4 = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * .4 );
-    // var material4 = new THREE.MeshBasicMaterial( { color: 0x1D84FF, transparent : true, opacity : 0.4 } );
-    // var torus4 = new THREE.Mesh( geometry4, material4 );
-    // torus4.position.z = 0.4
-    // torus4.rotateZ(Math.PI * .82)
-    // scene.add( torus4 );
+
 
     scene.add( mark );
-/**
-    var curve = new THREE.CubicBezierCurve(
-    	new THREE.Vector2( -0, 0.05 ),
-    	new THREE.Vector2( 0.26, 0.15 ),
-    	new THREE.Vector2( 0.53, 0.15 ),
-    	new THREE.Vector2( 0.8, 0.05 )
-    );
 
-    var points = curve.getPoints( 50 );
-    // var points2 = points.filter( (x,i) => i<1 );
-    // console.log('points==>',points)
-    // curve.updateArcLengths()
-    var geometry_b = new THREE.BufferGeometry().setFromPoints( points );
-    var material_b = new THREE.LineBasicMaterial( { color : 0x000000 } );
-    // curveObject.geometry.setFromPoints(points.slice(0,i)) //动态设置长短
-    // Create the final object to add to the scene
-    var curveObject = new THREE.Line( geometry_b, material_b );
-    // curveObject.visible = false;
-    console.log('curveObject',curveObject)
-    // scene.add(curveObject)
-
-**/
     /*字体*/
     var loader = new THREE.FontLoader();
     // var font = loader.parse(require('./fonts1/optimer_bold.typeface.json'));
@@ -570,33 +540,7 @@ const View = () => {
         })
         let textMeshB = new THREE.Mesh(geometryFontB,textMaterialB);
         textMeshB.position.set(-0.12,-0.02,0.01)
-        // textMeshB.translateY(-.1);
         tableCardMesh.add(textMeshB)
-        // let itemGrop:any = new THREE.Group();
-        // if (Array.isArray(table.itemDependedOnByList)&&table.itemDependedOnByList.length>0) {
-        //   table.itemDependedOnByList.forEach((tableItem:any,tableItemIndex:any)=>{
-        //     let tableItemFont:any = new THREE.TextGeometry( tableItem.name, {
-        //       font: font,
-        //       size: 0.03,
-        //       height: 0.001,
-        //     } );
-        //     let textMaterial = new THREE.MeshBasicMaterial({
-        //       color: 0x000000
-        //     })
-        //     let tableItemTextMesh = new THREE.Mesh(tableItemFont,textMaterial);
-        //     tableItemTextMesh.position.set(-0.14,-0.02,0.01)
-        //     let materialTableItem = new THREE.MeshBasicMaterial({color: new THREE.Color(0xE8ECF2)})
-        //     let tableItemMesh:any = new THREE.Mesh( geometry, materialTableItem );
-        //     tableItemMesh.translateX(0.10)
-        //     tableItemMesh.translateY(-0.17*(tableItemIndex+1))
-        //     tableItemMesh.add(tableItemTextMesh)
-        //     itemGrop.add(tableItemMesh)
-        //   })
-        //   itemGrop.name = "table-item-group";
-        //   // itemGrop.visible = false;
-        //   tableCardMesh.add(itemGrop)
-        // }
-
         group.add(tableCardMesh)
       })
 
@@ -830,47 +774,97 @@ const View = () => {
             let clickItem:any = intersects[0].object;
             console.log('clickItem',clickItem)
             if (currentStatus === 'table'&&allItem.some( (m:any) => m.id ===  intersects[0].object.id)) {
-              init(mark,{z:0.35});
-              tween.start()
-              currentStatus = 'tableItem';
+              setSpinning(true)
+              setTimeout(()=>{
+                init(mark,{z:0.35});
+                tween.start()
+                currentStatus = 'tableItem';
 
-              let torusGroup:any = new THREE.Group();
-              let sphereGroup:any = new THREE.Group();
-              let arrTableItem:any[] = allTableCard.reduce( (accumulator,currentValue) => accumulator.concat(currentValue.itemDependedOnByList),[])
-              let arrTableItemLength:number = arrTableItem.length;
+                let torusGroup:any = new THREE.Group();
+                let sphereGroup:any = new THREE.Group();
+                let arrTableItem:any[] = allTableCard.reduce( (accumulator,currentValue) => accumulator.concat(currentValue.itemDependedOnByList),[])
+                let arrTableItemLength:number = arrTableItem.length;
 
-              let createSphere = ( accSphere:any, cardSphere:any, idxSphere:number, sourceSphere:any ) => {
-                var geometry2 = new THREE.SphereGeometry( 0.02, 32, 32 );
-                var material2 = new THREE.MeshBasicMaterial( {color: COLOR_DATA[cardSphere.type]} );
-                var sphere2 = new THREE.Mesh( geometry2, material2 );
-                sphere2.position.z = 0.46
-                sphere2.position.x = accSphere.cos
-                sphere2.position.y = accSphere.sin
-                sphereGroup.add( sphere2 );
-                return {
-                  cos : Math.cos(( 360/ arrTableItemLength*(idxSphere+1) / 180)  * Math.PI+0.01),
-                  sin : Math.sin(( 360/ arrTableItemLength*(idxSphere+1) / 180)  * Math.PI+0.01),
+
+
+
+                let createSphere = ( accSphere:any, cardSphere:any, idxSphere:number, sourceSphere:any ) => {
+
+                  var sphere:any = TABLE_CHILDREN_SPHERE_MESH[cardSphere.type].clone();
+                  sphere.name = cardSphere.id;
+                  sphere.position.z = 0.46
+                  sphere.position.x = accSphere.cos
+                  sphere.position.y = accSphere.sin
+                  let textMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x000000
+                  })
+                  let geometryFont:any = new THREE.TextGeometry( cardSphere.name, {
+                    font: font,
+                    size: 0.03,
+                    height: 0.001,
+                  } );
+
+                  let textMesh = new THREE.Mesh(geometryFont,textMaterial);
+                  if (accSphere.cos>0) {
+                    textMesh.position.x = 0.02;
+                  }else{
+                    textMesh.position.x = -0.26;
+                  }
+                  textMesh.position.y = 0.03;
+                  sphere.add(textMesh)
+                  sphereGroup.add( sphere );
+                  return {
+                    cos : Math.cos(( 360/ arrTableItemLength*(idxSphere+1) / 180)  * Math.PI+0.01),
+                    sin : Math.sin(( 360/ arrTableItemLength*(idxSphere+1) / 180)  * Math.PI+0.01),
+                  }
                 }
-              }
 
-              let createTorusView = ( acc:any, card:any, idx:number, source:any ) => {
+                let createTorusView = ( acc:any, card:any, idx:number, source:any ) => {
 
-                var geometry = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2) -0.01 );
-                var material = new THREE.MeshBasicMaterial( { color: COLOR_DATA[card.cardType], transparent : true, opacity : 0.3 } );
-                var torus = new THREE.Mesh( geometry, material );
-                torus.rotateZ(acc)
-                torus.position.z = 0.4
+                  var geometry = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2) -0.01 );
+                  var material = new THREE.MeshBasicMaterial( { color: COLOR_DATA[card.cardType], transparent : true, opacity : 0.3 } );
+                  var torus = new THREE.Mesh( geometry, material );
+                  torus.rotateZ(acc)
+                  torus.position.z = 0.4
+                  torusGroup.add(torus)
+                  return acc+Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2)
+                }
+                allTableCard.reduce( createTorusView, 0 )
+                torusGroup.name = 'torusGroup';
+                scene.add( torusGroup )
 
-                torusGroup.add(torus)
-                return acc+Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2)
-              }
-              allTableCard.reduce( createTorusView, 0 )
-              arrTableItem.reduce( createSphere, {cos:Math.cos(( 0 / 180)  * Math.PI+0.01),sin:Math.sin(( 0 / 180)  * Math.PI+0.01)} )
+                arrTableItem.reduce( createSphere, {cos:Math.cos(( 0 / 180)  * Math.PI+0.01),sin:Math.sin(( 0 / 180)  * Math.PI+0.01)} )
+                sphereGroup.name = 'sphereGroup';
+                scene.add( sphereGroup )
+                console.log('currentItem===>',currentItem)
+                let lineGroups:any = new THREE.Group();
+                lineGroups.name = 'lineGroups';
+                currentItem.itemDependedOnByList.forEach((item:any,index:number)=>{
+                  let start = sphereGroup.children.filter((x:any)=>x.name==item.id)[0];
+                  item.dependedOnBy.forEach( (endItemId:any)=>{
+                    let end = sphereGroup.children.filter((x:any)=>x.name==endItemId)[0];
+                    var curveq = new THREE.QuadraticBezierCurve(
+                    	new THREE.Vector2( start.position.x, start.position.y ),
+                    	new THREE.Vector2( 0, 0 ),
+                    	new THREE.Vector2( end.position.x, end.position.y )
+                    );
 
-              torusGroup.name = 'torusGroup';
-              sphereGroup.name = 'sphereGroup';
-              setTimeout(()=>scene.add( torusGroup ),1000)
-              setTimeout(()=>scene.add( sphereGroup ),1000)
+                    var pointsq = curveq.getPoints( 50 );
+                    var geometryq = new THREE.BufferGeometry().setFromPoints( pointsq );
+
+                    var materialq = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+
+                    //Create the final object to add to the scene
+                    var curveObjectq = new THREE.Line( geometryq, materialq );
+                    curveObjectq.position.z = 0.46;
+                    lineGroups.add(curveObjectq)
+                  } )
+                })
+                scene.add(lineGroups)
+                setSpinning(false)
+              },1000)
+
+
             }
             if (currentStatus==='init'&&(clickItem.dependedOnBy.length>0||clickItem.depends.length>0)) {
               currentItem = clickItem;
@@ -925,6 +919,12 @@ const View = () => {
                 scene.remove(item)
               }
             })
+            scene.children.forEach( (item:any) => {
+              if (item.name === 'lineGroups') {
+                scene.remove(item)
+              }
+            })
+
             // allTableChildrenItemList.forEach( (group:any)=> group.visible = false )
           }
 
@@ -1000,7 +1000,15 @@ const View = () => {
   },[])
 
   return(
-    <div id="container"></div>
+    <div>
+      <Spin tip="Loading..." spinning={spinning}>
+        <div id="container">
+
+        </div>
+      </Spin>
+
+    </div>
+
   )
 }
 
