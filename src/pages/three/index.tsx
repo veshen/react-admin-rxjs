@@ -457,20 +457,29 @@ const View = () => {
     camera.lookAt(scene.position);
 
     //终点圆环
-    var geometryTorus = new THREE.TorusGeometry( 0.01, 0.004 , 8, 100 );
-    var materialTorus = new THREE.MeshBasicMaterial( { color: 0x666666 } );
-    var torus = new THREE.Mesh( geometryTorus, materialTorus );
+    let geometryTorus = new THREE.TorusGeometry( 0.01, 0.004 , 8, 100 );
+    let materialTorus = new THREE.MeshBasicMaterial( { color: 0x666666 } );
+    let torus = new THREE.Mesh( geometryTorus, materialTorus );
+
+    // table Mesh
+    let tableGeometry = new THREE.BoxGeometry( 0.36, 0.15, 0.01);
+    const TABLE_MESH:any = {
+      snapshot : new THREE.Mesh( tableGeometry, new THREE.MeshBasicMaterial({color:COLOR_DATA['snapshot']}) ),
+      param : new THREE.Mesh( tableGeometry, new THREE.MeshBasicMaterial({color:COLOR_DATA['param']}) ),
+      data : new THREE.Mesh( tableGeometry, new THREE.MeshBasicMaterial({color:COLOR_DATA['data']}) ),
+    }
+
     // 表的子项
-    var sphereGroupeometry = new THREE.SphereGeometry( 0.02, 32, 32 );
+    let sphereGroupeometry = new THREE.SphereGeometry( 0.02, 32, 32 );
     const TABLE_CHILDREN_SPHERE_MESH:any = {
-      input : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:new THREE.Color('rgb(118, 217, 166)')}) ),
-      formula : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:new THREE.Color('rgb(254, 183, 83)')}) ),
-      reference : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:new THREE.Color('rgb(51, 122, 183)')}) ),
+      input : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:COLOR_DATA['input']}) ),
+      formula : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:COLOR_DATA['formula']}) ),
+      reference : new THREE.Mesh( sphereGroupeometry, new THREE.MeshBasicMaterial({color:COLOR_DATA['reference']}) ),
     }
 
 
     // 坐标轴
-    var axes = new THREE.AxesHelper(1.6);
+    // var axes = new THREE.AxesHelper(1.6);
     // axes.position.z = 0.4
     // scene.add(axes);
 
@@ -484,16 +493,14 @@ const View = () => {
     let mark:any = new THREE.Mesh( markFeometry, markMaterial );
     mark.position.z = 0.02
 
-
-
-
     scene.add( mark );
 
     /*字体*/
     var loader = new THREE.FontLoader();
     // var font = loader.parse(require('./fonts1/optimer_bold.typeface.json'));
     // var font = loader.parse(require('./fonts1/FZLanTingHei-L-GBK_Regular.json'));
-    var font = loader.parse(require('./fonts1/Microsoft_YaHei_UI_Light_Regular.json'));
+    // var font = loader.parse(require('./fonts1/Microsoft_YaHei_UI_Light_Regular.json'));
+    var font = loader.parse(require('./fonts1/Microsoft_YaHei.json'));
     var stepGroup:any = new THREE.Group();
     var group:any = new THREE.Group();
     steps.forEach( ( item, i ) => {
@@ -513,12 +520,9 @@ const View = () => {
       textMesh.position.z = 0;
       stepGroup.add(textMesh)
 
-      let geometry = new THREE.BoxGeometry( 0.36, 0.15, 0.01);
-
-
       item.tables.forEach( (table:any,index:number) => {
-        let material = new THREE.MeshBasicMaterial({color:COLOR_DATA[table.type]})
-        let tableCardMesh:any = new THREE.Mesh( geometry, material );
+
+        let tableCardMesh:any = TABLE_MESH[table.type].clone();
         tableCardMesh.name = table.id;
         tableCardMesh.cardType = table.type;
         tableCardMesh.position.x = i * 0.6;
@@ -530,6 +534,7 @@ const View = () => {
         tableCardMesh.step = i;
         tableCardMesh.subIndex = index;
         tableCardMesh.itemDependedOnByList = table.itemDependedOnByList||[];
+        tableCardMesh.fontName = table.name;
         let geometryFontB:any = new THREE.TextGeometry( table.name, {
           font: font,
           size: 0.03,
@@ -755,11 +760,9 @@ const View = () => {
     let currentItem:any = { position:{} };
     let currentStatus:string = 'init'; // init : 初始化 ， table : 步骤表, tableItem : 步骤表依赖项目
     let allTableCard:any[] = [];
-    let allTableChildrenItemList:any[] = [];
     function onMouseClick( event:any ) {
 
         //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
-
         mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
@@ -769,8 +772,7 @@ const View = () => {
         // 获取raycaster直线和所有模型相交的数组集合
         var intersects = raycaster.intersectObjects( group.children );
         if (intersects.length>0&&currentStatus!=='tableItem') {
-            // init(intersects[0]);
-            // intersects[0].object.position.z += d0.1;
+
             let clickItem:any = intersects[0].object;
             console.log('clickItem',clickItem)
             if (currentStatus === 'table'&&allItem.some( (m:any) => m.id ===  intersects[0].object.id)) {
@@ -785,16 +787,16 @@ const View = () => {
                 let arrTableItem:any[] = allTableCard.reduce( (accumulator,currentValue) => accumulator.concat(currentValue.itemDependedOnByList),[])
                 let arrTableItemLength:number = arrTableItem.length;
 
-
-
-
+                //创建表项并分布到环形视图
                 let createSphere = ( accSphere:any, cardSphere:any, idxSphere:number, sourceSphere:any ) => {
 
                   var sphere:any = TABLE_CHILDREN_SPHERE_MESH[cardSphere.type].clone();
                   sphere.name = cardSphere.id;
                   sphere.position.z = 0.46
-                  sphere.position.x = accSphere.cos
-                  sphere.position.y = accSphere.sin
+                  // sphere.position.x = accSphere.cos
+                  // sphere.position.y = accSphere.sin
+                  sphere.position.x = Math.cos(( 360/ arrTableItemLength*(idxSphere+0.5) / 180)  * Math.PI+0.01)
+                  sphere.position.y = Math.sin(( 360/ arrTableItemLength*(idxSphere+0.5) / 180)  * Math.PI+0.01)
                   let textMaterial = new THREE.MeshBasicMaterial({
                     color: 0x000000
                   })
@@ -818,14 +820,29 @@ const View = () => {
                     sin : Math.sin(( 360/ arrTableItemLength*(idxSphere+1) / 180)  * Math.PI+0.01),
                   }
                 }
-
+                //创建圆环视图
                 let createTorusView = ( acc:any, card:any, idx:number, source:any ) => {
 
-                  var geometry = new THREE.TorusBufferGeometry( 1, 0.04, 10, 100,Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2) -0.01 );
+                  var geometry = new THREE.TorusBufferGeometry( 1.02, 0.04, 10, 100,Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2) -0.01 );
                   var material = new THREE.MeshBasicMaterial( { color: COLOR_DATA[card.cardType], transparent : true, opacity : 0.3 } );
                   var torus = new THREE.Mesh( geometry, material );
                   torus.rotateZ(acc)
                   torus.position.z = 0.4
+                  let textMaterial = new THREE.MeshBasicMaterial({
+                    color: COLOR_DATA[card.cardType]
+                  })
+                  let geometryFont:any = new THREE.TextGeometry( card.fontName, {
+                    font: font,
+                    size: 0.06,
+                    height: 0.001,
+                  } );
+
+                  let textMesh = new THREE.Mesh(geometryFont,textMaterial);
+                  textMesh.position.x = 1.2;
+                  textMesh.position.y = 0.2;
+                  textMesh.position.z = 0.5;
+                  textMesh.rotateZ(-acc)
+                  torus.add(textMesh)
                   torusGroup.add(torus)
                   return acc+Math.PI * (card.itemDependedOnByList.length/arrTableItemLength*2)
                 }
@@ -851,20 +868,21 @@ const View = () => {
 
                     var pointsq = curveq.getPoints( 50 );
                     var geometryq = new THREE.BufferGeometry().setFromPoints( pointsq );
-
                     var materialq = new THREE.LineBasicMaterial( { color : 0xff0000 } );
 
                     //Create the final object to add to the scene
                     var curveObjectq = new THREE.Line( geometryq, materialq );
                     curveObjectq.position.z = 0.46;
+
+                    let torusCopy:any = torus.clone();
+                    torusCopy.position.set(start.position.x-0.01,start.position.y-0.01,0);
+                    curveObjectq.add(torusCopy)
                     lineGroups.add(curveObjectq)
                   } )
                 })
                 scene.add(lineGroups)
                 setSpinning(false)
-              },1000)
-
-
+              },300)
             }
             if (currentStatus==='init'&&(clickItem.dependedOnBy.length>0||clickItem.depends.length>0)) {
               currentItem = clickItem;
@@ -876,11 +894,8 @@ const View = () => {
               allTableCard = [currentItem].concat(dependedOnByItem,dependsItem);
               // 线
               let lineArray = lineGroup.children.filter( (line:any) => line.connect.includes(currentItem.name) )
-              console.log('lineArray',lineArray,dependedOnByItem,dependsItem)
               let stepTitleIndex:any = Array.from(new Set([currentItem].concat(dependedOnByItem,dependsItem).map( (item:any) => item.step )))
-              console.log('stepTitleIndex',stepTitleIndex)
               allItem = Array.prototype.concat([currentItem],dependedOnByItem,dependsItem,lineArray,stepTitleIndex.map( (i:number) => stepGroup.children[i] ))
-              console.log('allItem',allItem)
 
               allItem.forEach( (mesh:any) => {
                 init(mesh,{z:0.3});
@@ -908,37 +923,13 @@ const View = () => {
             init(mark,{z:0.02});
             tween.start()
             console.log(scene)
-
-            scene.children.forEach( (item:any) => {
-              if (item.name === 'torusGroup') {
-                scene.remove(item)
-              }
-            })
-            scene.children.forEach( (item:any) => {
-              if (item.name === 'sphereGroup') {
-                scene.remove(item)
-              }
-            })
-            scene.children.forEach( (item:any) => {
-              if (item.name === 'lineGroups') {
-                scene.remove(item)
-              }
-            })
-
-            // allTableChildrenItemList.forEach( (group:any)=> group.visible = false )
+            let delObjectName = ['torusGroup','sphereGroup','lineGroups'];
+            for (let i = 0; i < delObjectName.length; i++) {
+                let name:any = delObjectName[i];
+                let obj:any = scene.getObjectByName(name);
+                scene.remove(obj)
+            }
           }
-
-
-          // init(stepGroup);
-          // tweenBack.start()
-
-
-          // setTimeout(()=>{
-          //   const { tweenLineBack } = init(curveObject);
-          //   tweenLineBack.start()
-          // },200)
-          // curveObject.visible = false;
-
         }
 
         var intersectsMark = raycaster.intersectObjects( [mark] );
@@ -946,28 +937,10 @@ const View = () => {
 
             if (onOff===false) {
 
-                // onOff=true;
-                // const { tweenOpacityBack } = init(mark);
-                // tweenOpacityBack.start()
-                //
-                // init(group.children[2]);
-                // tweenBack.start()
-                // init(group.children[0]);
-                // tweenBack.start()
-                // init(curveObject);
-                // tweenBack.start()
-                // setTimeout(()=>{
-                //   curveObject.visible = false;
-                // },200)
+
             }
 
         }
-        //将所有的相交的模型的颜色设置为红色，如果只需要将第一个触发事件，那就数组的第一个模型改变颜色即可
-        // for ( var i = 0; i < intersects.length; i++ ) {
-        //
-        //     intersects[ i ].object.material.color.set( 0xff0000 );
-        //
-        // }
 
     }
 
@@ -986,13 +959,7 @@ const View = () => {
     animate();
     function animate() {
 
-      // console.log(points)
       trackballControls.update(clock.getDelta());
-      // stepGroup.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
-      // stepGroup.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
-      // stepGroup.children.forEach( (meshItem:any) => meshItem.rotation.z += 0.01)
-      // group.children.forEach( (meshItem:any) => meshItem.rotation.y += 0.01)
-      // group.children.forEach( (meshItem:any) => meshItem.rotation.z += 0.01)
     	requestAnimationFrame( animate );
       TWEEN.update()
     	renderer.render( scene, camera );
@@ -1006,9 +973,7 @@ const View = () => {
 
         </div>
       </Spin>
-
     </div>
-
   )
 }
 
