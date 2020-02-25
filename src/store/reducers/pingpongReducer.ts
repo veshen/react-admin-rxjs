@@ -33,8 +33,8 @@ export const pingpongReducer = (state : pingpongState = initalState, action:any)
       return { ...state, isPinging: false };
     case getType(actions.todoListAddItemAction):
       return { ...state, toDoList : [...state.toDoList,{text:action.payload.text,id:action.payload.text+'a'}]};
-    case getType(actions.todoListFetchAddItemAction):
-      return { ...state, toDoList : [...state.toDoList,...action.payload]};
+    // case getType(actions.todoListFetchAddItemAction):
+    //   return { ...state, toDoList : [...state.toDoList,...action.payload]};
     default:
       return state;
   }
